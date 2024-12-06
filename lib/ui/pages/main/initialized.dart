@@ -2,12 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:project/ui/pages/cart/cart.dart';
 import 'package:project/ui/pages/home/home.dart';
 import 'package:project/ui/pages/search/search.dart';
+import 'package:project/ui/pages/shop/shop.dart';
 
 final List<Widget> pages = [
   HYHomeScreen(),
   SearchScreen(),
   HYHomeScreen(),
-  HYHomeScreen(),
+  ShopScreen(),
   CartScreen(),
 ];
 
