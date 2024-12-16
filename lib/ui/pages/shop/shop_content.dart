@@ -1,6 +1,7 @@
 import 'package:bottom_sheet/bottom_sheet.dart';
 import 'package:flutter/material.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project/ui/pages/product_detail/product_detail.dart';
 
 class ShopContent extends StatefulWidget {
   const ShopContent({super.key});
@@ -15,8 +16,6 @@ class _ShopContentState extends State<ShopContent> {
 
   @override
   Widget build(BuildContext context) {
-    final double _favRadius = 80.px;
-
     return Column(
       children: [
         buildFilterSection(context),
@@ -26,13 +25,13 @@ class _ShopContentState extends State<ShopContent> {
             child: GridView.builder(
               itemCount: 100,
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 300.px,
-                mainAxisSpacing: 12.px,
-                crossAxisSpacing: 32.px,
-                childAspectRatio: 0.7,
+                maxCrossAxisExtent: 300.w,
+                mainAxisSpacing: 12.w,
+                crossAxisSpacing: 32.h,
+                childAspectRatio: 0.6,
               ),
               itemBuilder: (BuildContext ctx, int index) {
-                return buildItem(_favRadius, context);
+                return buildItem(context);
               },
             ),
           ),
@@ -50,12 +49,11 @@ class _ShopContentState extends State<ShopContent> {
           // Filter Button
           Row(
             children: [
-              Icon(Icons.filter_list),
+              const Icon(Icons.filter_list),
               Text(
                 "Filter: ",
                 style: Theme.of(ctx).textTheme.displayLarge,
               ),
-              
             ],
           ),
           // Sort Button
@@ -65,10 +63,13 @@ class _ShopContentState extends State<ShopContent> {
               children: [
                 Text(
                   selectedSort,
-                  style: Theme.of(ctx).textTheme.displayMedium?.copyWith(color: Colors.blue),
+                  style: Theme.of(ctx).textTheme.displayMedium?.copyWith(
+                        color: Colors.blue,
+                        fontSize: 18.sp,
+                      ),
                 ),
                 IconButton(
-                  icon: Icon(Icons.sort),
+                  icon: const Icon(Icons.sort),
                   onPressed: () {
                     // Show Bottom Sheet for Sorting
                     showFlexibleBottomSheet<void>(
@@ -83,7 +84,6 @@ class _ShopContentState extends State<ShopContent> {
                     );
                   },
                 ),
-                
               ],
             ),
           ),
@@ -92,20 +92,30 @@ class _ShopContentState extends State<ShopContent> {
     );
   }
 
-  Widget _buildSortBottomSheet(BuildContext context, ScrollController scrollController) {
-    return Material(
-      child: Container(
-        padding: EdgeInsets.all(16.px),
-        child: ListView(
-          controller: scrollController,
-          children: [
-            Text(
-              "Sort By",
-              style: Theme.of(context).textTheme.headlineSmall,
+Widget _buildSortBottomSheet(BuildContext context, ScrollController scrollController) {
+  return Material(
+    child: Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(topLeft: Radius.circular(100.sp), topRight: Radius.circular(100.sp)),
+      ),
+      padding: EdgeInsets.symmetric(vertical: 16.sp),
+      child: ListView(
+        controller: scrollController,
+        children: [
+          // Price: Lowest to Highest
+          Container(
+            decoration: BoxDecoration(
+              color: selectedSort == "Price: Lowest to Highest" ? Colors.red[100] : Colors.transparent,
+              borderRadius: BorderRadius.circular(10.sp), // Rounded corners for the ListTile
             ),
-            Divider(),
-            ListTile(
-              title: Text("Price: Lowest to Highest"),
+            child: ListTile(
+              title: Text(
+                "Price: Lowest to Highest",
+                style: TextStyle(
+                  color: selectedSort == "Price: Lowest to Highest" ? Colors.red : Colors.black,
+                ),
+              ),
               onTap: () {
                 setState(() {
                   selectedSort = "Price: Lowest to Highest";
@@ -113,8 +123,20 @@ class _ShopContentState extends State<ShopContent> {
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              title: Text("Price: Highest to Lowest"),
+          ),
+          // Price: Highest to Lowest
+          Container(
+            decoration: BoxDecoration(
+              color: selectedSort == "Price: Highest to Lowest" ? Colors.red[100] : Colors.transparent,
+              borderRadius: BorderRadius.circular(10.sp), // Rounded corners for the ListTile
+            ),
+            child: ListTile(
+              title: Text(
+                "Price: Highest to Lowest",
+                style: TextStyle(
+                  color: selectedSort == "Price: Highest to Lowest" ? Colors.red : Colors.black,
+                ),
+              ),
               onTap: () {
                 setState(() {
                   selectedSort = "Price: Highest to Lowest";
@@ -122,8 +144,20 @@ class _ShopContentState extends State<ShopContent> {
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              title: Text("Popular"),
+          ),
+          // Popular
+          Container(
+            decoration: BoxDecoration(
+              color: selectedSort == "Popular" ? Colors.red[100] : Colors.transparent,
+              borderRadius: BorderRadius.circular(10.sp), // Rounded corners for the ListTile
+            ),
+            child: ListTile(
+              title: Text(
+                "Popular",
+                style: TextStyle(
+                  color: selectedSort == "Popular" ? Colors.red : Colors.black,
+                ),
+              ),
               onTap: () {
                 setState(() {
                   selectedSort = "Popular";
@@ -131,8 +165,20 @@ class _ShopContentState extends State<ShopContent> {
                 Navigator.pop(context);
               },
             ),
-            ListTile(
-              title: Text("Latest"),
+          ),
+          // Latest
+          Container(
+            decoration: BoxDecoration(
+              color: selectedSort == "Latest" ? Colors.red[100] : Colors.transparent,
+              borderRadius: BorderRadius.circular(10.sp), // Rounded corners for the ListTile
+            ),
+            child: ListTile(
+              title: Text(
+                "Latest",
+                style: TextStyle(
+                  color: selectedSort == "Latest" ? Colors.red : Colors.black,
+                ),
+              ),
               onTap: () {
                 setState(() {
                   selectedSort = "Latest";
@@ -140,43 +186,49 @@ class _ShopContentState extends State<ShopContent> {
                 Navigator.pop(context);
               },
             ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+
+  Container buildItem(BuildContext context) {
+    return Container(
+      child: GestureDetector(
+        onTap: () {
+          Navigator.pushNamed(context, ProductDetailScreen.routeName);
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildImageStack(),
+            Text(
+              "Yonex",
+              style: Theme.of(context).textTheme.displayMedium?.copyWith(color: Colors.grey),
+            ),
+            Text("Product E", style: Theme.of(context).textTheme.displayLarge),
+            Text("RM 1314.00", style: Theme.of(context).textTheme.displayLarge),
           ],
         ),
       ),
     );
   }
 
-  Container buildItem(double _favRadius, BuildContext context) {
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildImageStack(_favRadius),
-          Text(
-            "Yonex",
-            style: Theme.of(context).textTheme.displayMedium?.copyWith(color: Colors.grey),
-          ),
-          Text("Product E", style: Theme.of(context).textTheme.displayLarge),
-          Text("RM 1314.00", style: Theme.of(context).textTheme.displayLarge),
-        ],
-      ),
-    );
-  }
-
-  Stack buildImageStack(double _favRadius) {
+  Stack buildImageStack() {
     return Stack(
       alignment: Alignment.bottomRight,
       children: [
         Image.asset("assets/images/ph.png"),
         Positioned(
           bottom: 0,
-          right: 10.px,
+          right: 1.w,
           child: Container(
-            width: _favRadius,
-            height: _favRadius,
+            width: 80.w,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              border: Border.all(color: Colors.black, width: 1.0.px),
+              border: Border.all(color: Colors.black, width: 1.0.w),
               color: Colors.white,
             ),
             child: Center(
@@ -187,7 +239,7 @@ class _ShopContentState extends State<ShopContent> {
                 icon: Icon(
                   Icons.favorite_outline,
                   color: Colors.red,
-                  size: _favRadius - 20.0.px,
+                  size: 30.w,
                 ),
               ),
             ),

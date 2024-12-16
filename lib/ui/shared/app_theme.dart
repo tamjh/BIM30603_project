@@ -1,31 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HYAppTheme {
-  static const double bodyFontSize = 14;
-  static const double smallFontSize = 16;
-  static const double mediumFontSize = 20;
-  static const double largeFontSize = 24;
-  static const double xlargefontSize = 30;
+  static double bodyFontSize = 14.sp;
+  static  double smallFontSize = 16.sp;
+  static  double mediumFontSize = 20.sp;
+  static  double largeFontSize = 24.sp;
+  static  double xlargefontSize = 30.sp;
 
   static final ThemeData normalTheme = ThemeData(
-    appBarTheme: AppBarTheme(
+    appBarTheme: const AppBarTheme(
       backgroundColor: Colors.transparent,
       foregroundColor: Colors.black,
       centerTitle: false,
       toolbarHeight: 80,
     ),
-    bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       selectedItemColor: Colors.pinkAccent,
       unselectedItemColor: Colors.grey,
-      backgroundColor: Color.fromRGBO(249, 249, 249, 1),
+      backgroundColor: Colors.transparent,
     ),
-    splashColor: Colors.transparent,
-    floatingActionButtonTheme: FloatingActionButtonThemeData(
+    splashColor: const Color.fromARGB(0, 255, 255, 255),
+    floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: Colors.amber,
       foregroundColor: Colors.white,
     ),
-    scaffoldBackgroundColor: Color.fromRGBO(253, 253, 253, 1),
+    scaffoldBackgroundColor: const Color.fromRGBO(253, 253, 253, 1),
+    
     textTheme: TextTheme(
       bodySmall: TextStyle(
         fontSize: bodyFontSize,
@@ -53,8 +55,8 @@ class HYAppTheme {
         fontFamily: GoogleFonts.tapestry().fontFamily,
       ),
     ),
-    drawerTheme: DrawerThemeData(
-      backgroundColor: Color.fromRGBO(255, 254, 222, 1),
+    drawerTheme: const DrawerThemeData(
+      backgroundColor: Color.fromRGBO(240, 240, 239, 1),
     ),
     switchTheme: SwitchThemeData(
       trackColor: MaterialStateProperty.resolveWith<Color>(

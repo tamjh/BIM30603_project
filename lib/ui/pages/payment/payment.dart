@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/ui/pages/payment/payment_content.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PaymentScreen extends StatelessWidget {
   static final String routeName = "/payment_form";
@@ -15,7 +15,7 @@ class PaymentScreen extends StatelessWidget {
           style: Theme.of(context)
               .textTheme
               .displayLarge
-              ?.copyWith(fontSize: 60.px),
+              ?.copyWith(fontSize: 35.sp),
         ),
       ),
       body: PaymentContent(),

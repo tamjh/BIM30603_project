@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/ui/pages/cart/cart_content.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 
 class CartScreen extends StatelessWidget {
@@ -11,7 +11,7 @@ class CartScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Cart", style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 60.px)),
+        title: Text("My Cart", style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 40.sp)),
         centerTitle: true,
         // leading: IconButton(onPressed: (){
         //   Navigator.pushNamed(context, HYMainScreen.routeName);

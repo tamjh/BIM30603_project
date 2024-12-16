@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/main.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class OrderHistoryContent extends StatelessWidget {
   const OrderHistoryContent({super.key});
@@ -15,29 +14,41 @@ class OrderHistoryContent extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 10),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 40.0.h, horizontal: 10.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text(
-                        "Order Number OD9999${index}",
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(color: Colors.black),
+                      Container(
+                        width: 220.w,
+                        child: Text(
+                          "Order Number OD9999${index}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayMedium
+                              ?.copyWith(color: Colors.black, fontSize: 20.sp),
+                        ),
                       ),
-                      Text(
-                        "22-04-2003",
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(color: const Color.fromARGB(255, 103, 103, 103)),
+                      Expanded(
+                        child: Container(
+                          alignment: Alignment.centerRight,
+                          child: Text(
+                            "22-04-2003",
+                            style: Theme.of(context)
+                                .textTheme
+                                .displayMedium
+                                ?.copyWith(
+                                    color: const Color.fromARGB(
+                                        255, 103, 103, 103)),
+                          ),
+                        ),
                       )
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 5.h, horizontal: 10.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -48,10 +59,10 @@ class OrderHistoryContent extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium
-                                ?.copyWith(color: Colors.grey),
+                                ?.copyWith(color: Colors.grey, fontSize: 15.sp),
                           ),
                           Text("${index + 1}",
-                              style: Theme.of(context).textTheme.displayMedium)
+                              style: Theme.of(context).textTheme.displayMedium?.copyWith(fontSize: 20.sp))
                         ],
                       ),
                       Row(
@@ -61,33 +72,42 @@ class OrderHistoryContent extends StatelessWidget {
                             style: Theme.of(context)
                                 .textTheme
                                 .displayMedium
-                                ?.copyWith(color: Colors.grey),
+                                ?.copyWith(color: Colors.grey, fontSize: 15.sp),
                           ),
                           Text("RM 123.45",
-                              style: Theme.of(context).textTheme.displayMedium)
+                              style: Theme.of(context).textTheme.displayMedium?.copyWith(fontSize: 20.sp))
                         ],
                       )
                     ],
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                  padding:
+                      EdgeInsets.symmetric(vertical: 10.h, horizontal: 10.w),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ElevatedButton(
-                        style: ButtonStyle(
-                          backgroundColor: MaterialStateProperty.all(Colors.red),
-                        ),
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all(Colors.red),
+                          ),
                           onPressed: () {},
                           child: Text(
                             "Detail",
                             style: Theme.of(context)
                                 .textTheme
                                 .displayLarge
-                                ?.copyWith(color: Colors.white, fontSize: 50.px),
+                                ?.copyWith(
+                                    color: Colors.white, fontSize: 25.sp),
                           )),
-                          Text("Complete", style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.green),)
+                      Text(
+                        "Complete",
+                        style: Theme.of(context)
+                            .textTheme
+                            .displayLarge
+                            ?.copyWith(color: Colors.green),
+                      )
                     ],
                   ),
                 )

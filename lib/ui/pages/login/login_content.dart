@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:project/ui/pages/home/home.dart';
-import 'package:project/ui/pages/main/main.dart';
+import 'package:project/core/model/UserModel.dart';
 import 'package:project/ui/pages/register/register.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:project/ui/pages/main/main.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:provider/provider.dart';
+import 'package:project/core/viewmodel/user_view_model.dart';
 
 class HYLoginContent extends StatefulWidget {
   HYLoginContent({super.key});
@@ -13,35 +14,33 @@ class HYLoginContent extends StatefulWidget {
   State<HYLoginContent> createState() => _HYLoginContentState();
 }
 
-class _HYLoginContentState extends State<HYLoginContent> {
-  bool pwdVissible = false;
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+final TextEditingController emailController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
+bool pwdVissible = false;
 
+class _HYLoginContentState extends State<HYLoginContent> {
   @override
   Widget build(BuildContext context) {
-    // Ensure HYSizeFit is initialized for responsive scaling
-    HYSizeFit.initialize();
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.px),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return Consumer<UserViewModel>(
+      builder: (context, viewModel, child) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return ListView(
+              padding: EdgeInsets.symmetric(horizontal: 20.w),
               children: [
-                SizedBox(height: constraints.maxHeight * 0.15),
+                SizedBox(height: constraints.maxHeight * 0.10),
                 buildLoginTitle(context),
-                SizedBox(height: 50.px),
+                SizedBox(height: 50.h),
                 buildContent(),
-                SizedBox(height: 10.px),
+                SizedBox(height: 10.h),
                 buildArrow(context),
-                SizedBox(height: 20.px),
-                buildSubmitButton(context),
+                SizedBox(height: 20.h),
+                viewModel.isLoading
+                    ? const Center(child: CircularProgressIndicator())
+                    : buildSubmitButton(context, viewModel),
               ],
-            ),
-          ),
+            );
+          },
         );
       },
     );
@@ -50,11 +49,11 @@ class _HYLoginContentState extends State<HYLoginContent> {
   Widget buildLoginTitle(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(left: 20.px),
+      padding: EdgeInsets.only(left: 20.w),
       child: Text(
         "Login",
         style: TextStyle(
-          fontSize: 50.px,
+          fontSize: 50.sp,
           fontFamily: GoogleFonts.tapestry().fontFamily,
         ),
       ),
@@ -66,7 +65,7 @@ class _HYLoginContentState extends State<HYLoginContent> {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.px),
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
             child: TextFormField(
               controller: emailController,
               decoration: InputDecoration(
@@ -81,9 +80,9 @@ class _HYLoginContentState extends State<HYLoginContent> {
               ),
             ),
           ),
-          SizedBox(height: 50.px),
+          SizedBox(height: 30.h),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.px),
+            padding: EdgeInsets.symmetric(horizontal: 10.w),
             child: TextFormField(
               obscureText: !pwdVissible,
               controller: passwordController,
@@ -128,7 +127,7 @@ class _HYLoginContentState extends State<HYLoginContent> {
             "Register new account?",
             style: TextStyle(
               fontFamily: GoogleFonts.tapestry().fontFamily,
-              fontSize: 20.px,
+              fontSize: 20.sp,
             ),
           ),
           const Icon(
@@ -141,10 +140,11 @@ class _HYLoginContentState extends State<HYLoginContent> {
     );
   }
 
-  Widget buildSubmitButton(BuildContext ctx) {
+  Widget buildSubmitButton(BuildContext ctx, UserViewModel viewModel) {
+    final double buttonHeight = MediaQuery.of(context).size.height * 0.1;
     return Container(
       width: double.infinity,
-      height: 60.px,
+      height: buttonHeight,
       child: ElevatedButton(
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.all(Colors.red),
@@ -152,18 +152,37 @@ class _HYLoginContentState extends State<HYLoginContent> {
         child: Text(
           "Submit",
           style: TextStyle(
-            color: Colors.white,
-            fontFamily: GoogleFonts.tapestry().fontFamily,
-          ),
+              color: Colors.white,
+              fontFamily: GoogleFonts.tapestry().fontFamily,
+              fontSize: buttonHeight * 0.5),
         ),
         onPressed: () {
-          print("Email: ${emailController.text}");
-          print("Password: ${passwordController.text}");
-
-          // After login, navigate back to the main screen with bottom navigation
-          Navigator.pushNamed(ctx, HYMainScreen.routeName);
+          _login(viewModel);
         },
       ),
     );
+  }
+
+  Future<void> _login(UserViewModel viewModel) async {
+    String email = emailController.text.trim();
+    String password = passwordController.text.trim();
+
+    try {
+      UserModel? user = await viewModel.login(email: email, password: password);
+
+      if (user != null) {
+        print("User Logged In: ${user.toMap()}");
+
+        // Navigate to the main page
+        Navigator.pushNamed(context, HYMainScreen.routeName);
+      }
+    } catch (e) {
+      print(e);
+
+      // Show error message to the user
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.toString())),
+      );
+    }
   }
 }

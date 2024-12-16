@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/ui/pages/edit_address/edit_address.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BuildAddressBox extends StatelessWidget {
   final String label;
@@ -15,11 +15,11 @@ class BuildAddressBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(bottom: 20.px),
-      padding: EdgeInsets.all(20.px),
+      margin: EdgeInsets.only(bottom: 10.sp),
+      padding: EdgeInsets.all(10.sp),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 2.px),
-        borderRadius: BorderRadius.circular(10.px),
+        border: Border.all(color: Colors.black, width: 2.w),
+        borderRadius: BorderRadius.circular(10.sp),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -28,12 +28,12 @@ class BuildAddressBox extends StatelessWidget {
           Text(
             label,
             style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  fontSize: 30.px,
+                  fontSize: 20.sp,
                   fontWeight: FontWeight.bold,
                   fontStyle: FontStyle.italic,
                 ),
           ),
-          SizedBox(height: 10.px),
+          SizedBox(height: 10.h),
 
           // Address Content
           Row(
@@ -43,7 +43,7 @@ class BuildAddressBox extends StatelessWidget {
                 child: Text(
                   controller.text,
                   style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        fontSize: 35.px,
+                        fontSize: 25.sp,
                       ),
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
@@ -53,7 +53,7 @@ class BuildAddressBox extends StatelessWidget {
                 onTap: () {
                   Navigator.pushNamed(context, EditAddress.routeName);
                 },
-                child: Icon(Icons.edit, color: Colors.red, size: 50.px),
+                child: Icon(Icons.edit, color: Colors.red, size: 25.sp),
               ),
             ],
           ),

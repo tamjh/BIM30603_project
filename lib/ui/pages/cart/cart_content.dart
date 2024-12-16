@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:project/ui/pages/payment/payment.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CartContent extends StatelessWidget {
   const CartContent({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final double _imageRadius = 200.px;
+    final double _imageRadius = 120.sp;
     return Container(
       child: Column(
         children: [
@@ -18,7 +18,7 @@ class CartContent extends StatelessWidget {
                 return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
@@ -35,7 +35,7 @@ class CartContent extends StatelessWidget {
                         ),
                         buildPrice(context),
                         SizedBox(
-                          width: 10.px,
+                          width: 10.w,
                         )
                       ],
                     ));
@@ -44,7 +44,7 @@ class CartContent extends StatelessWidget {
           ),
           buildTotal(context),
           Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20.0),
+            padding: const EdgeInsets.symmetric(vertical: 20),
             child: buildButtons(context),
           ),
         ],
@@ -63,14 +63,14 @@ class CartContent extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .displayLarge
-                ?.copyWith(fontSize: 50.px),
+                ?.copyWith(fontSize: 30.sp),
           ),
           Text(
             "RM 520.50",
             style: Theme.of(context)
                 .textTheme
                 .displayLarge
-                ?.copyWith(fontSize: 40.px),
+                ?.copyWith(fontSize: 25.sp),
           )
         ],
       ),
@@ -84,11 +84,11 @@ class CartContent extends StatelessWidget {
       children: [
         IconButton(
           onPressed: () {},
-          icon: Icon(Icons.delete, size: 40.px),
+          icon: Icon(Icons.delete, size: 30.sp),
         ),
         Text(
           "RM 120.50",
-          style: Theme.of(context).textTheme.displayLarge,
+          style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 20.sp),
         ),
       ],
     );
@@ -111,7 +111,7 @@ class CartContent extends StatelessWidget {
             child: Text(
               "-",
               style: TextStyle(
-                fontSize: 24.0, // Increased font size
+                fontSize: 20.sp, // Increased font size
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -125,7 +125,7 @@ class CartContent extends StatelessWidget {
             style: Theme.of(context)
                 .textTheme
                 .displayMedium
-                ?.copyWith(fontSize: 50.px),
+                ?.copyWith(fontSize: 25.sp),
           ),
         ),
         // Increase button
@@ -142,7 +142,7 @@ class CartContent extends StatelessWidget {
             child: Text(
               "+",
               style: TextStyle(
-                fontSize: 24.0, // Increased font size
+                fontSize: 20.sp, // Increased font size
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -156,7 +156,7 @@ class CartContent extends StatelessWidget {
     return Text(
       "Product A",
       style:
-          Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 40.px),
+          Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 25.sp),
     );
   }
 
@@ -185,7 +185,7 @@ class CartContent extends StatelessWidget {
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50.0),
-                    side: BorderSide(color: Colors.black, width: 2.0),
+                    side: BorderSide(color: Colors.black, width: 2.w),
                   ),
                 ),
               ),

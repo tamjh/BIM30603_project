@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EditAddressContent extends StatefulWidget {
   const EditAddressContent({super.key});
@@ -26,7 +26,7 @@ class _EditAddressContentState extends State<EditAddressContent> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(10.0.sp),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -42,7 +42,7 @@ class _EditAddressContentState extends State<EditAddressContent> {
               hintText: "House No, Unit No, Street",
             ),
           ),
-          const SizedBox(height: 15.0),
+          SizedBox(height: 15.h),
 
           // Postcode and City Fields
           Row(
@@ -61,7 +61,7 @@ class _EditAddressContentState extends State<EditAddressContent> {
                   ),
                 ),
               ),
-              const SizedBox(width: 10.0), // Space between fields
+              SizedBox(width: 10.sp),
               Expanded(
                 flex: 3,
                 child: TextFormField(
@@ -78,7 +78,7 @@ class _EditAddressContentState extends State<EditAddressContent> {
               ),
             ],
           ),
-          const SizedBox(height: 15.0),
+          SizedBox(height: 15.sp),
 
           // State Field
           TextFormField(
@@ -93,7 +93,7 @@ class _EditAddressContentState extends State<EditAddressContent> {
             ),
           ),
           SizedBox(
-            height: 40.px,
+            height: 20.h,
           ),
           Container(
             width: double.infinity,
@@ -103,7 +103,7 @@ class _EditAddressContentState extends State<EditAddressContent> {
                     backgroundColor: MaterialStateProperty.all(Colors.red)),
                 child: Text(
                   "Save",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.white, fontSize: 30.sp),
                 )),
           ),
         ],

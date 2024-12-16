@@ -1,84 +1,115 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project/core/viewmodel/home_view_modal.dart';
+import 'package:project/core/viewmodel/index_view_model.dart';
+import 'package:project/ui/pages/product_detail/product_detail.dart';
+import 'package:provider/provider.dart';
 
-class HYHomeContent extends StatelessWidget {
+class HYHomeContent extends StatefulWidget {
   const HYHomeContent({super.key});
 
   @override
+  _HYHomeContentState createState() => _HYHomeContentState();
+}
+
+class _HYHomeContentState extends State<HYHomeContent> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
+      await homeViewModel.fetchProducts();
+      
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        const HeaderLabel(),
-        const SearchBar(),
-        const SizedBox(height: 10),
-        const CategoriesSection(),
-        const SizedBox(height: 10),
-        ItemSection(
-          title: "Hot",
-          items: [
-            {
-              'title': 'Yonex',
-              'price': 'RM200',
-              'discountedPrice': 'RM148',
-              'imagePath': 'assets/images/ph.png'
-            },
-            {
-              'title': 'Adidas',
-              'price': 'RM250',
-              'discountedPrice': 'RM200',
-              'imagePath': 'assets/images/ph.png'
-            },
+    final homeViewModel = Provider.of<HomeViewModel>(context);
+
+    return Consumer<HomeViewModel>(
+      builder: (context, viewModel, child) {
+        if (viewModel.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        return ListView(
+          children: [
+            const HeaderLabel(),
+            const SearchBar(),
+            SizedBox(height: 10.h),
+            const CategoriesSection(),
+            SizedBox(height: 10.h),
+            ItemSection(
+              title: "Hot",
+              items: viewModel.hotProducts.map((product) {
+                return {
+                  'id': product.id,
+                  'name': product.name,
+                  'price': product.price.toString(),
+                  'brand': product.brand,
+                  'imagePath': product.image ?? 'assets/images/placeholder.png',
+                };
+              }).toList(),
+            ),
+            SizedBox(height: 30.h),
+            ItemSection(
+              title: "New",
+              items: viewModel.newProducts.map((product) {
+                return {
+                  'id': product.id,
+                  'name': product.name,
+                  'price': product.price.toString(),
+                  'brand': product.brand,
+                  'imagePath': product.image ?? 'assets/images/placeholder.png',
+                };
+              }).toList(),
+            ),
+            GestureDetector(
+              onTap: () {
+                // Navigate to ShopScreen
+                Provider.of<NavigationViewModel>(context, listen: false)
+                    .setCurrentIndex(1);
+              },
+              child: Container(
+                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
+                child: Text(
+                  "Go to Shop",
+                  style: TextStyle(fontSize: 20.sp, color: Colors.blue),
+                ),
+              ),
+            ),
           ],
-        ),
-        const SizedBox(height: 30),
-        ItemSection(
-          title: "New",
-          items: [
-            {
-              'title': 'Nike',
-              'price': 'RM300',
-              'discountedPrice': 'RM250',
-              'imagePath': 'assets/images/ph.png'
-            },
-            {
-              'title': 'Puma',
-              'price': 'RM220',
-              'discountedPrice': 'RM180',
-              'imagePath': 'assets/images/ph.png'
-            },
-          ],
-        ),
-      ],
+        );
+      },
     );
   }
 }
 
-// Section 1: Header
 class HeaderLabel extends StatelessWidget {
   const HeaderLabel({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: 10.px, horizontal: 20.px),
+      padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
       child: Text(
         "Explore Sport Performance",
         style:
-            Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 80.px),
+            Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 40.sp),
       ),
     );
   }
 }
 
-// Section 2: Search Bar
 class SearchBar extends StatelessWidget {
   const SearchBar({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10.px, vertical: 30.px),
+      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 30.h),
       child: TextField(
         decoration: InputDecoration(
           border: const OutlineInputBorder(),
@@ -91,17 +122,16 @@ class SearchBar extends StatelessWidget {
   }
 }
 
-// Section 3: Categories
 class CategoriesSection extends StatelessWidget {
   const CategoriesSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    const int numCategories = 4; // Number of categories
-    final double spacing = 10.px; // Space between items
+    const int numCategories = 4;
+    final double spacing = 10.w;
 
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.px),
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: Wrap(
         spacing: spacing,
         runSpacing: spacing,
@@ -116,11 +146,10 @@ class CategoryItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.sizeOf(context).width;
-    double spacing = 10.px;
-    final double availableWidth = screenWidth - (spacing * 5); // Adjust spacing
-    final double radius =
-        availableWidth / 4 / 2; // Dynamically calculate radius
+    final double screenWidth = MediaQuery.of(context).size.width;
+    double spacing = 10.w;
+    final double availableWidth = screenWidth - (spacing * 5);
+    final double radius = availableWidth / 4 / 2;
 
     return Container(
       width: radius * 2,
@@ -133,36 +162,45 @@ class CategoryItem extends StatelessWidget {
   }
 }
 
-// Section 4: Reusable Section Title
-class SectionTitle extends StatelessWidget {
+class SectionTitle extends StatefulWidget {
   final String title;
   const SectionTitle({required this.title, super.key});
 
   @override
+  State<SectionTitle> createState() => _SectionTitleState();
+}
+
+class _SectionTitleState extends State<SectionTitle> {
+  @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: EdgeInsets.all(8.0.sp),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
-            title,
+            widget.title,
             style: Theme.of(context)
                 .textTheme
                 .displayLarge
-                ?.copyWith(fontSize: 80.px),
+                ?.copyWith(fontSize: 40.sp),
           ),
-          Row(
-            children: [
-              Text(
-                "View All",
-                style: Theme.of(context)
-                    .textTheme
-                    .displayLarge
-                    ?.copyWith(fontSize: 30.px),
-              ),
-              Icon(Icons.arrow_right_sharp, size: 50.px),
-            ],
+          GestureDetector(
+            onTap: () {
+              context.read<NavigationViewModel>().setCurrentIndex(3);
+            },
+            child: Row(
+              children: [
+                Text(
+                  "View All",
+                  style: Theme.of(context)
+                      .textTheme
+                      .displayLarge
+                      ?.copyWith(fontSize: 20.sp),
+                ),
+                Icon(Icons.arrow_right_sharp, size: 20.sp),
+              ],
+            ),
           )
         ],
       ),
@@ -170,7 +208,6 @@ class SectionTitle extends StatelessWidget {
   }
 }
 
-// Section 5: Reusable Item Section
 class ItemSection extends StatelessWidget {
   final String title;
   final List<Map<String, String>> items;
@@ -184,18 +221,22 @@ class ItemSection extends StatelessWidget {
       children: [
         SectionTitle(title: title),
         SizedBox(
-          height: 1000.px,
+          height: MediaQuery.of(context).size.width * 0.75,
           child: ListView.builder(
             itemCount: items.length,
             scrollDirection: Axis.horizontal,
             itemBuilder: (ctx, index) {
               final item = items[index];
-              return SectionItem(
-                index: index,
-                title: item['title'] ?? '',
-                price: item['price'] ?? '',
-                discountedPrice: item['discountedPrice'] ?? '',
-                imagePath: item['imagePath'] ?? '',
+              return GestureDetector(
+                onTap: () {},
+                child: SectionItem(
+                  index: index,
+                  id: item['id'] ?? '',
+                  name: item['name'] ?? '',
+                  brand: item['brand'] ?? '',
+                  price: item['price'] ?? '',
+                  imagePath: item['imagePath'] ?? '',
+                ),
               );
             },
           ),
@@ -205,114 +246,118 @@ class ItemSection extends StatelessWidget {
   }
 }
 
-// Reusable Section Item
 class SectionItem extends StatelessWidget {
   final int index;
-  final String title;
+  final String name;
+  final String brand;
   final String price;
-  final String discountedPrice;
   final String imagePath;
+  final String id;
 
   const SectionItem({
     required this.index,
-    required this.title,
+    required this.id,
+    required this.name,
+    required this.brand,
     required this.price,
-    required this.discountedPrice,
     required this.imagePath,
     super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    final double _favRadius = 100.px;
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 12.px),
-      width: 500.px,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey, width: 2.px),
-        borderRadius: BorderRadius.circular(12.px),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(children: [
-            ClipRRect(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(12.px)),
-              child: Image.asset(
-                imagePath,
-                width: double.infinity,
-                fit: BoxFit.contain,
-              ),
-            ),
-            Positioned(
-              bottom: 0,
-              right: 10.px,
-              child: Container(
-                width: _favRadius,
-                height: _favRadius,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.black, width: 1.0),
-                  color: Colors.white,
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    // Your onPressed functionality here
-                  },
-                  icon: Icon(Icons.favorite_outline, color: Colors.red, size: _favRadius-20.px,),
-                ),
-              ),
-            ),
-          ]),
-          Padding(
-            padding: EdgeInsets.all(12.px),
-            child: Column(
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double maxItemWidth = screenWidth * 0.3;
+    final double itemWidth =
+        screenWidth < 1200 ? maxItemWidth : screenWidth * 0.3;
+    final double itemHeight = itemWidth * 1.6;
+    final double favIconSize = 24.sp;
+
+    return GestureDetector(
+      onTap: () {
+        Navigator.pushNamed(context, ProductDetailScreen.routeName,
+            arguments: id);
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
+        width: itemWidth,
+        height: itemHeight,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey, width: 1.5.w),
+          borderRadius: BorderRadius.circular(12.sp),
+        ),
+        child: Stack(
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 40.px,
-                    fontFamily: GoogleFonts.tapestry().fontFamily,
+                ClipRRect(
+                  borderRadius:
+                      BorderRadius.vertical(top: Radius.circular(12.w)),
+                  child: Image.asset(
+                    "assets/images/pro/$imagePath.png",
+                    width: itemWidth,
+                    height: itemHeight * 0.6,
+                    fit: BoxFit.cover,
                   ),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  "Product $index",
-                  style: TextStyle(
-                    fontSize: 50.px,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: GoogleFonts.tapestry().fontFamily,
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        brand,
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16.sp,
+                          fontFamily: GoogleFonts.tapestry().fontFamily,
+                        ),
+                      ),
+                      SizedBox(height: 5.h),
+                      Text(
+                        name,
+                        style: TextStyle(
+                          fontSize: 18.sp,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: GoogleFonts.tapestry().fontFamily,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      SizedBox(height: 8.h),
+                      Text(
+                        "RM $price",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16.sp,
+                          fontFamily: GoogleFonts.tapestry().fontFamily,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Text(
-                      price,
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 40.px,
-                        decoration: TextDecoration.lineThrough,
-                        fontFamily: GoogleFonts.tapestry().fontFamily,
-                      ),
-                    ),
-                    SizedBox(width: 30.px),
-                    Text(
-                      discountedPrice,
-                      style: TextStyle(
-                        fontSize: 52.px,
-                        color: Colors.red,
-                        fontFamily: GoogleFonts.tapestry().fontFamily,
-                      ),
-                    ),
-                  ],
                 ),
               ],
             ),
-          ),
-        ],
+            Positioned(
+              bottom: 10.h,
+              right: 1.w,
+              child: IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.favorite_outline,
+                  color: Colors.red,
+                  size: favIconSize,
+                ),
+                style: const ButtonStyle(
+                  splashFactory:
+                      NoSplash.splashFactory, // Disable splash effect
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

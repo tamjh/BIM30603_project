@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project/core/model/UserModel.dart';
+import 'package:project/core/viewmodel/user_view_model.dart';
 import 'package:project/ui/pages/login/login.dart';
-import 'package:project/ui/pages/register/register.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:project/ui/pages/main/main.dart';
+import 'package:provider/provider.dart';
 
 class HYRegisterContent extends StatefulWidget {
   HYRegisterContent({super.key});
@@ -13,44 +15,41 @@ class HYRegisterContent extends StatefulWidget {
 }
 
 class _HYRegisterContentState extends State<HYRegisterContent> {
-  bool pwdVissible = false;
-  bool repwdVissible = false;
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController repasswordController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
 
-  bool comparedPassword(String p1, String p2) {
-    if (p1 == p2) {
-      return true;
-    }
-    return false;
-  }
+  final TextEditingController emailController = TextEditingController();
+
+  final TextEditingController passwordController = TextEditingController();
+
+  final TextEditingController repasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    // Ensure HYSizeFit is initialized for responsive scaling
-    HYSizeFit.initialize();
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return SingleChildScrollView(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20.px),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(height: constraints.maxHeight * 0.15),
-                buildRegisterTitle(context),
-                SizedBox(height: 50.px),
-                buildContent(),
-                SizedBox(height: 10.px),
-                buildArrow(context),
-                SizedBox(height: 20.px),
-                buildSubmitButton(),
-              ],
-            ),
-          ),
+    return Consumer<UserViewModel>(
+      builder: (context, viewModel, child) {
+        return LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: constraints.maxHeight * 0.15),
+                    buildRegisterTitle(context),
+                    SizedBox(height: 50.h),
+                    buildContent(),
+                    SizedBox(height: 10.h),
+                    buildArrow(context),
+                    SizedBox(height: 20.h),
+                    viewModel.isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : buildSubmitButton(viewModel, context),
+                  ],
+                ),
+              ),
+            );
+          },
         );
       },
     );
@@ -59,11 +58,11 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
   Widget buildRegisterTitle(BuildContext context) {
     return Container(
       width: double.infinity,
-      padding: EdgeInsets.only(left: 20.px),
+      padding: EdgeInsets.only(left: 20.sp),
       child: Text(
         "Register",
         style: TextStyle(
-          fontSize: 50.px,
+          fontSize: 50.sp,
           fontFamily: GoogleFonts.tapestry().fontFamily,
         ),
       ),
@@ -71,97 +70,54 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
   }
 
   Widget buildContent() {
-    return Container(
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.px),
-            child: TextFormField(
-              controller: nameController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Please enter your name",
-                label: Text(
-                  "Name",
-                  style: TextStyle(
-                    fontFamily: GoogleFonts.tapestry().fontFamily,
-                  ),
-                ),
-              ),
-            ),
+    return Column(
+      children: [
+        buildTextField(nameController, "Name", "Please enter your name"),
+        SizedBox(height: 30.h),
+        buildTextField(emailController, "Email", "Please enter your email"),
+        SizedBox(height: 30.h),
+        buildPasswordField(passwordController, "Password", "Please enter your password"),
+        SizedBox(height: 30.h),
+        buildPasswordField(repasswordController, "Re-enter Password", "Please re-enter your password"),
+      ],
+    );
+  }
+
+  Widget buildTextField(TextEditingController controller, String label, String hint) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          hintText: hint,
+          label: Text(label, style: TextStyle(fontFamily: GoogleFonts.tapestry().fontFamily)),
+        ),
+      ),
+    );
+  }
+
+  //the display password have problem (cannot toggle / cannot display)
+  Widget buildPasswordField(TextEditingController controller, String label, String hint) {
+    bool passwordVisible = false;
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      child: TextFormField(
+        obscureText: !passwordVisible,
+        controller: controller,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          hintText: hint,
+          label: Text(label, style: TextStyle(fontFamily: GoogleFonts.tapestry().fontFamily)),
+          suffixIcon: IconButton(
+            onPressed: () {
+              setState(() {
+                passwordVisible = !passwordVisible;
+              });
+            },
+            icon: Icon(passwordVisible ? Icons.visibility : Icons.visibility_off),
           ),
-          SizedBox(height: 50.px),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.px),
-            child: TextFormField(
-              controller: emailController,
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: "Please enter your email",
-                label: Text(
-                  "Email",
-                  style: TextStyle(
-                    fontFamily: GoogleFonts.tapestry().fontFamily,
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 50.px),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.px),
-            child: TextFormField(
-              obscureText: !pwdVissible,
-              controller: passwordController,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                hintText: "Please enter your password",
-                label: Text(
-                  "Password",
-                  style: TextStyle(
-                    fontFamily: GoogleFonts.tapestry().fontFamily,
-                  ),
-                ),
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      pwdVissible = !pwdVissible;
-                    });
-                  },
-                  icon: Icon(
-                      pwdVissible ? Icons.visibility : Icons.visibility_off),
-                ),
-              ),
-            ),
-          ),
-          SizedBox(height: 50.px),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.px),
-            child: TextFormField(
-              obscureText: !repwdVissible,
-              controller: repasswordController,
-              decoration: InputDecoration(
-                border: const OutlineInputBorder(),
-                hintText: "Please re-enter your password",
-                label: Text(
-                  "Re-enter Password",
-                  style: TextStyle(
-                    fontFamily: GoogleFonts.tapestry().fontFamily,
-                  ),
-                ),
-                suffixIcon: IconButton(
-                  onPressed: () {
-                    setState(() {
-                      repwdVissible = !repwdVissible;
-                    });
-                  },
-                  icon: Icon(
-                      repwdVissible ? Icons.visibility : Icons.visibility_off),
-                ),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
@@ -169,8 +125,6 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
   Widget buildArrow(BuildContext ctx) {
     return GestureDetector(
       onTap: () {
-        print("Navigating to Login Page");
-
         Navigator.pushNamed(ctx, HYLogin.routeName);
       },
       child: Row(
@@ -180,7 +134,7 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
             "Login your account?",
             style: TextStyle(
               fontFamily: GoogleFonts.tapestry().fontFamily,
-              fontSize: 20.px,
+              fontSize: 20.sp,
             ),
           ),
           const Icon(
@@ -193,14 +147,12 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
     );
   }
 
-  Widget buildSubmitButton() {
+  Widget buildSubmitButton(UserViewModel viewModel, BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 60.px,
+      height: 60.h,
       child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(Colors.red),
-        ),
+        style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
         child: Text(
           "Submit",
           style: TextStyle(
@@ -208,17 +160,23 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
             fontFamily: GoogleFonts.tapestry().fontFamily,
           ),
         ),
-        onPressed: () {
-          if (comparedPassword(
-              passwordController.text, repasswordController.text)) {
-            print("Name: ${nameController.text}");
-            print("Email: ${emailController.text}");
-            print("Password: ${passwordController.text}");
-            print("Re-Password: ${repasswordController.text}");
-          } else {
-            print(
-                "Password 1 is ${passwordController.text} and password 2 is ${repasswordController.text}");
-            print("Please ensure two password are same");
+        onPressed: () async {
+          String email = emailController.text.trim();
+          String password = passwordController.text.trim();
+          String name = nameController.text.trim();
+
+          try {
+            UserModel? user = await viewModel.register(
+              email: email,
+              password: password,
+              name: name,
+            );
+
+            if (user != null) {
+              Navigator.pushNamed(context, HYMainScreen.routeName);
+            }
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
           }
         },
       ),

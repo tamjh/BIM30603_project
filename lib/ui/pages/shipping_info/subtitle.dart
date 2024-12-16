@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BuildSubTitle extends StatelessWidget {
   final String title;
@@ -12,7 +12,7 @@ class BuildSubTitle extends StatelessWidget {
       child: Text(
         title,
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
-              fontSize: 50.px,
+              fontSize: 30.sp,
               fontWeight: FontWeight.bold,
             ),
       ),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/ui/pages/shipping_info/account_content.dart';
 import 'package:project/ui/pages/shipping_info/address_content.dart';
 import 'package:project/ui/pages/shipping_info/subtitle.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ShippingInfoContent extends StatefulWidget {
   const ShippingInfoContent({super.key});
@@ -27,12 +27,12 @@ class _ShippingInfoContentState extends State<ShippingInfoContent> {
   @override
   Widget build(BuildContext context) {
     return ListView(
-      padding: EdgeInsets.all(20.px),
+      padding: EdgeInsets.all(20.w),
       children: [
         const BuildSubTitle(title: "Account Settings"),
         BuildAccountBox(
             nameController: _nameController, phoneController: _phoneController),
-        SizedBox(height: 50.px),
+        SizedBox(height: 50.h),
         const BuildSubTitle(title: "Delivery Address"),
         ...List.generate(
           _addressControllers.length,
@@ -44,7 +44,7 @@ class _ShippingInfoContentState extends State<ShippingInfoContent> {
             );
           },
         ),
-        SizedBox(height: 20.px),
+        SizedBox(height: 20.h),
         ElevatedButton.icon(
           onPressed: () {          },
           icon: const Icon(Icons.add),

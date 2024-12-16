@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class BuildAccountBox extends StatelessWidget {
   const BuildAccountBox({
@@ -15,10 +15,10 @@ class BuildAccountBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(20.px),
+      padding: EdgeInsets.all(10.w),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 2.px),
-        borderRadius: BorderRadius.circular(10.px),
+        border: Border.all(color: Colors.black, width: 2.w),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         children: [
@@ -61,11 +61,11 @@ class _BuildAccountEditState extends State<BuildAccountEdit> {
               Text(
                 widget.label,
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                      fontSize: 32.px,
+                      fontSize: 20.sp,
                       fontWeight: FontWeight.bold,
                     ),
               ),
-              SizedBox(height: 8.px),
+              SizedBox(height: 8.sp),
               TextField(
                 controller: widget.controller,
                 onChanged: (value) => setState(() {
@@ -73,10 +73,10 @@ class _BuildAccountEditState extends State<BuildAccountEdit> {
                 }),
                 decoration: InputDecoration(
                   isDense: true,
-                  contentPadding: EdgeInsets.symmetric(horizontal: 10.px, vertical: 8.px),
+                  contentPadding: EdgeInsets.symmetric(vertical: 8.h),
                 ),
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontSize: 24.px,
+                      fontSize: 20.sp,
                     ),
               ),
             ],
@@ -90,7 +90,7 @@ class _BuildAccountEditState extends State<BuildAccountEdit> {
                 _displaySave = false;
               });
             },
-            child: IconButton(onPressed: (){}, icon: Icon(Icons.save, color: Colors.green, size: 50.px),)
+            child: IconButton(onPressed: (){}, icon: Icon(Icons.save, color: Colors.green, size: 30.sp),)
           ),
         
       ],

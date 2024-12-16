@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/shared/size_fit.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SearchContent extends StatefulWidget {
   SearchContent({super.key});
@@ -20,7 +20,7 @@ class _SearchContentState extends State<SearchContent> {
           buildSearch(),
           buildSelection(),
           Padding(
-            padding: EdgeInsets.symmetric(vertical: 20.px),
+            padding: EdgeInsets.symmetric(vertical: 20.h),
             child: buildButtons(),
           ),
         ],
@@ -48,8 +48,8 @@ class _SearchContentState extends State<SearchContent> {
       children: [
         Expanded(
           child: Container(
-            height: 100.px,
-            margin: EdgeInsets.symmetric(horizontal: 5.0), // Adds spacing
+            height: 60.h,
+            margin: EdgeInsets.symmetric(horizontal: 15.w), // Adds spacing
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(
@@ -58,7 +58,7 @@ class _SearchContentState extends State<SearchContent> {
                 shape: MaterialStateProperty.all(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50.0),
-                    side: BorderSide(color: Colors.black, width: 2.0),
+                    side: BorderSide(color: Colors.black, width: 2.w),
                   ),
                 ),
               ),
@@ -74,8 +74,8 @@ class _SearchContentState extends State<SearchContent> {
         ),
         Expanded(
           child: Container(
-            height: 100.px,
-            margin: EdgeInsets.symmetric(horizontal: 5.0), // Adds spacing
+            height: 60.h,
+            margin: EdgeInsets.symmetric(horizontal: 5.w), // Adds spacing
             child: ElevatedButton(
               style: ButtonStyle(
                 backgroundColor: MaterialStateProperty.all(Colors.red),
@@ -125,8 +125,9 @@ class _BuildSelectionState extends State<buildSelection> {
                 title: Text(
                   "Brand ${index + 1}",
                   style: TextStyle(
-                      color:
-                          _selectedBrands[index] ? Colors.red : Colors.black),
+                      color: _selectedBrands[index] ? Colors.red : Colors.black,
+                      fontSize: 20.sp
+                    ),
                 ),
                 trailing: Icon(
                   _selectedBrands[index]

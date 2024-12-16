@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "992421604567",
+    "project_id": "vsesport-a5846",
+    "storage_bucket": "vsesport-a5846.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:992421604567:android:1744ead28995ca72359492",
+        "android_client_info": {
+          "package_name": "com.example.project"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2zM3amTvsXz9vsZcb-RuH7-q9VL-CmtQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

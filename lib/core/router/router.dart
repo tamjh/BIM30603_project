@@ -6,6 +6,7 @@ import 'package:project/ui/pages/login/login.dart';
 import 'package:project/ui/pages/main/main.dart';
 import 'package:project/ui/pages/order_history/order_history.dart';
 import 'package:project/ui/pages/payment/payment.dart';
+import 'package:project/ui/pages/product_detail/product_detail.dart';
 import 'package:project/ui/pages/register/register.dart';
 import 'package:project/ui/pages/search/search.dart';
 import 'package:project/ui/pages/shipping_info/shipping_info.dart';
@@ -25,7 +26,8 @@ class HYRouter {
     ShippingInfoScreen.routeName: (ctx) => ShippingInfoScreen(),
     EditAddress.routeName: (ctx) => EditAddress(),
     PaymentScreen.routeName: (ctx) => PaymentScreen(),
-    ShopScreen.routeName: (ctx) => ShopScreen()
+    ShopScreen.routeName: (ctx) => ShopScreen(),
+    ProductDetailScreen.routeName: (ctx) => ProductDetailScreen()
   };
 
   static final RouteFactory generateRoute = (settings) => null;
