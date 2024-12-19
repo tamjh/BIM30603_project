@@ -17,11 +17,6 @@ class ProductModel {
         products: List<Product>.from(
             json['products'].map((x) => Product.fromJson(x))),
       );
-
-//to json format (save in firestore)
-  Map<String, dynamic> toJson() => {
-        'products': List<dynamic>.from(products.map((x) => x.toJson())),
-      };
 }
 
 //for one product
@@ -105,9 +100,6 @@ factory Product.fromJson(Map<String, dynamic> json) {
   );
 }
 
-
-
-
   Map<String, dynamic> toJson() => {
         'id': id,
         'name': name,
@@ -129,8 +121,8 @@ class Detail {
   });
 
   factory Detail.fromJson(Map<String, dynamic> json) => Detail(
-        key: json['key'],
-        value: json['value'],
+        key: json['key'] ?? '',
+        value: json['value'] ?? '',
       );
 
   Map<String, dynamic> toJson() => {

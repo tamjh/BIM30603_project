@@ -171,7 +171,7 @@ class _HYLoginContentState extends State<HYLoginContent> {
       UserModel? user = await viewModel.login(email: email, password: password);
 
       if (user != null) {
-        print("User Logged In: ${user.toMap()}");
+        // print("User Logged In: ${user.toMap()}");
 
         // Navigate to the main page
         Navigator.pushNamed(context, HYMainScreen.routeName);

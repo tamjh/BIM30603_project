@@ -14,7 +14,7 @@ import 'package:project/ui/pages/shop/shop.dart';
 
 class HYRouter {
   static final String initialRoute = HYLogin.routeName;
-
+  
   static final Map<String, WidgetBuilder> route = {
     HYLogin.routeName: (ctx) => HYLogin(),
     HYRegister.routeName: (ctx) => HYRegister(),

@@ -10,7 +10,7 @@ class ProductDetailContent extends StatelessWidget {
 
   Future<Product> fetchProductDetails() async {
     // Instantiate your ProductService and fetch the product details
-    final productService = ProductServiceImple();
+    final productService = ProductService();
     return await productService
         .getProductDetails(id); // Ensure this returns a single Product
   }
@@ -35,9 +35,7 @@ class ProductDetailContent extends StatelessWidget {
           return Center(child: Text("Product not found"));
         } else {
           final product = snapshot.data!; // Get the product data
-          print(product.description[0]
-              .value); // Ensure that \n exists in the description
-
+          
           return Column(
             children: [
               Expanded(
@@ -46,7 +44,7 @@ class ProductDetailContent extends StatelessWidget {
                     Image.asset(
                       "assets/images/pro/${product.image}.png", // Display product image
                       width: imageWidth,
-                      height: imageHeight, // Adjust height for responsiveness
+                      height: imageHeight*0.5, // Adjust height for responsiveness
                       fit: BoxFit.contain, // Ensure the image fits nicely
                     ),
                     Padding(
@@ -56,7 +54,7 @@ class ProductDetailContent extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
                           Expanded(
-                            flex: 2,
+                            flex: 3,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
@@ -87,14 +85,14 @@ class ProductDetailContent extends StatelessWidget {
                             flex: 1,
                             child: Align(
                               alignment: Alignment
-                                  .centerRight, // Align the text to the right
+                                  .centerRight,
                               child: Text(
-                                "RM ${product.price}", // Display product price
+                                "RM ${product.price}", 
                                 style: Theme.of(context)
                                     .textTheme
                                     .displayLarge
                                     ?.copyWith(
-                                      fontSize: 22.sp, // Responsive font size
+                                      fontSize: 22.sp, 
                                     ),
                               ),
                             ),

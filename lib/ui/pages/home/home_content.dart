@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project/core/viewmodel/home_view_modal.dart';
 import 'package:project/core/viewmodel/index_view_model.dart';
-import 'package:project/ui/pages/product_detail/product_detail.dart';
+import 'package:project/ui/widgets/item_display.dart';
 import 'package:provider/provider.dart';
 
 class HYHomeContent extends StatefulWidget {
@@ -20,7 +19,6 @@ class _HYHomeContentState extends State<HYHomeContent> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final homeViewModel = Provider.of<HomeViewModel>(context, listen: false);
       await homeViewModel.fetchProducts();
-      
     });
   }
 
@@ -47,9 +45,9 @@ class _HYHomeContentState extends State<HYHomeContent> {
                 return {
                   'id': product.id,
                   'name': product.name,
-                  'price': product.price.toString(),
+                  'price': product.price,
                   'brand': product.brand,
-                  'imagePath': product.image ?? 'assets/images/placeholder.png',
+                  'imagePath': product.image ?? 'assets/images/ph.png',
                 };
               }).toList(),
             ),
@@ -60,25 +58,11 @@ class _HYHomeContentState extends State<HYHomeContent> {
                 return {
                   'id': product.id,
                   'name': product.name,
-                  'price': product.price.toString(),
+                  'price': product.price,
                   'brand': product.brand,
-                  'imagePath': product.image ?? 'assets/images/placeholder.png',
+                  'imagePath': product.image ?? 'assets/images/ph.png',
                 };
               }).toList(),
-            ),
-            GestureDetector(
-              onTap: () {
-                // Navigate to ShopScreen
-                Provider.of<NavigationViewModel>(context, listen: false)
-                    .setCurrentIndex(1);
-              },
-              child: Container(
-                padding: EdgeInsets.symmetric(vertical: 10.h, horizontal: 20.w),
-                child: Text(
-                  "Go to Shop",
-                  style: TextStyle(fontSize: 20.sp, color: Colors.blue),
-                ),
-              ),
             ),
           ],
         );
@@ -210,7 +194,7 @@ class _SectionTitleState extends State<SectionTitle> {
 
 class ItemSection extends StatelessWidget {
   final String title;
-  final List<Map<String, String>> items;
+  final List<Map<String, dynamic>> items;
 
   const ItemSection({required this.title, required this.items, super.key});
 
@@ -221,7 +205,7 @@ class ItemSection extends StatelessWidget {
       children: [
         SectionTitle(title: title),
         SizedBox(
-          height: MediaQuery.of(context).size.width * 0.75,
+          height: 400.h,
           child: ListView.builder(
             itemCount: items.length,
             scrollDirection: Axis.horizontal,
@@ -229,136 +213,30 @@ class ItemSection extends StatelessWidget {
               final item = items[index];
               return GestureDetector(
                 onTap: () {},
-                child: SectionItem(
-                  index: index,
-                  id: item['id'] ?? '',
-                  name: item['name'] ?? '',
-                  brand: item['brand'] ?? '',
-                  price: item['price'] ?? '',
-                  imagePath: item['imagePath'] ?? '',
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.5, // Fixed width for each item
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.5, // Adjust width as needed
+                        child: SectionItem(
+                          id: item['id'] ?? '',
+                          name: item['name'] ?? '',
+                          brand: item['brand'] ?? '',
+                          price: item['price'] ?? '',
+                          imagePath: item['imagePath'] ?? '',
+                          ratio: 0.4,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
           ),
         ),
       ],
-    );
-  }
-}
-
-class SectionItem extends StatelessWidget {
-  final int index;
-  final String name;
-  final String brand;
-  final String price;
-  final String imagePath;
-  final String id;
-
-  const SectionItem({
-    required this.index,
-    required this.id,
-    required this.name,
-    required this.brand,
-    required this.price,
-    required this.imagePath,
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final double screenWidth = MediaQuery.of(context).size.width;
-    final double maxItemWidth = screenWidth * 0.3;
-    final double itemWidth =
-        screenWidth < 1200 ? maxItemWidth : screenWidth * 0.3;
-    final double itemHeight = itemWidth * 1.6;
-    final double favIconSize = 24.sp;
-
-    return GestureDetector(
-      onTap: () {
-        Navigator.pushNamed(context, ProductDetailScreen.routeName,
-            arguments: id);
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 8.w, vertical: 10.h),
-        width: itemWidth,
-        height: itemHeight,
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey, width: 1.5.w),
-          borderRadius: BorderRadius.circular(12.sp),
-        ),
-        child: Stack(
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius:
-                      BorderRadius.vertical(top: Radius.circular(12.w)),
-                  child: Image.asset(
-                    "assets/images/pro/$imagePath.png",
-                    width: itemWidth,
-                    height: itemHeight * 0.6,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 10.w, vertical: 5.h),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        brand,
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16.sp,
-                          fontFamily: GoogleFonts.tapestry().fontFamily,
-                        ),
-                      ),
-                      SizedBox(height: 5.h),
-                      Text(
-                        name,
-                        style: TextStyle(
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: GoogleFonts.tapestry().fontFamily,
-                        ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        "RM $price",
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 16.sp,
-                          fontFamily: GoogleFonts.tapestry().fontFamily,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: 10.h,
-              right: 1.w,
-              child: IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.favorite_outline,
-                  color: Colors.red,
-                  size: favIconSize,
-                ),
-                style: const ButtonStyle(
-                  splashFactory:
-                      NoSplash.splashFactory, // Disable splash effect
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
