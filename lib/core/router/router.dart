@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/core/model/address_model.dart';
 import 'package:project/ui/pages/cart/cart.dart';
 import 'package:project/ui/pages/edit_address/edit_address.dart';
 import 'package:project/ui/pages/home/home.dart';
@@ -14,7 +15,7 @@ import 'package:project/ui/pages/shop/shop.dart';
 
 class HYRouter {
   static final String initialRoute = HYLogin.routeName;
-  
+
   static final Map<String, WidgetBuilder> route = {
     HYLogin.routeName: (ctx) => HYLogin(),
     HYRegister.routeName: (ctx) => HYRegister(),
@@ -24,7 +25,14 @@ class HYRouter {
     CartScreen.routeName: (ctx) => CartScreen(),
     OrderHistory.routeName: (ctx) => OrderHistory(),
     ShippingInfoScreen.routeName: (ctx) => ShippingInfoScreen(),
-    EditAddress.routeName: (ctx) => EditAddress(),
+    EditAddress.routeName: (ctx) {
+      final address = ModalRoute.of(ctx)?.settings.arguments as Address?;
+      if (address == null) {
+        throw ArgumentError(
+            "Address argument is required for EditAddress route");
+      }
+      return EditAddress(address: address);
+    },
     PaymentScreen.routeName: (ctx) => PaymentScreen(),
     ShopScreen.routeName: (ctx) => ShopScreen(),
     ProductDetailScreen.routeName: (ctx) => ProductDetailScreen()

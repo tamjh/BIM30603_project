@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project/core/model/UserModel.dart';
+import 'package:project/core/model/address_model.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   Future<UserModel?> login({
     required String email,
     required String password,
@@ -96,4 +97,147 @@ class AuthService {
     }
   }
 
+  Future<void> updateName(String uid, String name) async {
+    try {
+      await _firestore.collection('users').doc(uid).update({
+        'name': name,
+      });
+      print("Name updated successfully.");
+    } catch (e) {
+      print("Update Name Error: $e");
+      throw Exception("Update Name failed: ${e.toString()}");
+    }
+  }
+
+  Future<void> updatePhone(String uid, String phone) async {
+    try {
+      await _firestore.collection('users').doc(uid).update({
+        'phone': phone,
+      });
+      print("Name updated successfully.");
+    } catch (e) {
+      print("Update Name Error: $e");
+      throw Exception("Update Name failed: ${e.toString()}");
+    }
+  }
+
+  Future<void> addNewAddress(String uid, String address, String postcode,
+      String city, String state) async {
+    try {
+      DocumentReference docRef = _firestore.collection('users').doc(uid);
+      CollectionReference addressRef = docRef.collection('addresses');
+
+      // Create a new address document
+      final Map<String, dynamic> newAddress = {
+        'address': address,
+        'postcode': postcode,
+        'city': city,
+        'state': state,
+      };
+
+      await addressRef.add(newAddress);
+    } catch (e) {
+      print("Update Address Error: $e");
+      throw Exception("Update Address failed: ${e.toString()}");
+    }
+  }
+
+  Future<void> updateAddress(String uid, String addressId, String address,
+      String postcode, String city, String state) async {
+    try {
+      DocumentReference docRef = _firestore.collection('users').doc(uid);
+      CollectionReference addressRef = docRef.collection('addresses');
+
+      final Map<String, dynamic> newAddress = {
+        'address': address,
+        'postcode': postcode,
+        'city': city,
+        'state': state,
+        'isDefault': false,
+      };
+
+      await addressRef.doc(addressId).update(newAddress);
+    } catch (e) {
+      print("Update Address Error: $e");
+      throw Exception("Update Address failed: ${e.toString()}");
+    }
+  }
+
+  Future<List<Address>> getAddresses(String uid) async {
+    try {
+      // Reference to the user's document and addresses subcollection
+      DocumentReference docRef = _firestore.collection('users').doc(uid);
+      CollectionReference addressRef = docRef.collection('addresses');
+
+      // Retrieve all address documents
+      QuerySnapshot querySnapshot = await addressRef.get();
+
+      // Map each document to an Address model
+      List<Address> addresses = querySnapshot.docs.map((doc) {
+        return Address(
+          id: doc.id,
+          address: doc['address'],
+          postcode: doc['postcode'],
+          city: doc['city'],
+          state: doc['state'],
+          isDefault: doc['isDefault'],
+        );
+      }).toList();
+
+      return addresses;
+    } catch (e) {
+      print("Get Addresses Error: $e");
+      throw Exception("Get Addresses failed: ${e.toString()}");
+    }
+  }
+
+  Future<void> setDefaultAddress(String userId, String addressId) async {
+    // First, set all addresses to non-default
+    final addressDocs = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('addresses')
+        .get();
+
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+
+    // Set all addresses to non-default
+    for (var doc in addressDocs.docs) {
+      batch.update(doc.reference, {'isDefault': false});
+    }
+
+    // Set the selected address as default
+    batch.update(
+        FirebaseFirestore.instance
+            .collection('users')
+            .doc(userId)
+            .collection('addresses')
+            .doc(addressId),
+        {'isDefault': true});
+
+    await batch.commit();
+  }
+
+  Future<Address?> getDefaultAddress(String userId) async {
+    final querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .doc(userId)
+        .collection('addresses')
+        .where('isDefault', isEqualTo: true)
+        .limit(1)
+        .get();
+
+    if (querySnapshot.docs.isEmpty) return null;
+
+    final doc = querySnapshot.docs.first;
+    return Address(
+      id: doc.id,
+      address: doc['address'],
+      postcode: doc['postcode'],
+      city: doc['city'],
+      state: doc['state'],
+      isDefault: doc['isDefault'],
+      
+    );
+  }
 }

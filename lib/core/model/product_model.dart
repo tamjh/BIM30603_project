@@ -42,16 +42,14 @@ class Product {
 factory Product.fromJson(Map<String, dynamic> json) {
   // Fetch description
   var descriptionData = json['description'];
-  print('Raw description data: $descriptionData'); // Debugging line
+  // print('Raw description data: $descriptionData'); // Debugging line
 
   // Replace escaped newline character (\n or \\n) with actual newline
   descriptionData = descriptionData.replaceAll(r'\n', '\n');  // Handle escaped newline
 
   // Verify and print each character to see if the newline is \n, \r, or \r\n
-  print('Raw description characters:');
-  descriptionData.runes.forEach((rune) {
-    print('Character: ${String.fromCharCode(rune)}');
-  });
+  // print('Raw description characters:');
+
 
   List<Detail> description = [];
 
@@ -85,9 +83,9 @@ factory Product.fromJson(Map<String, dynamic> json) {
   }
 
   // Print cleaned description data
-  description.forEach((detail) {
-    print('Description Key: ${detail.key}, Value: ${detail.value}');
-  });
+  // description.forEach((detail) {
+  //   print('Description Key: ${detail.key}, Value: ${detail.value}');
+  // });
 
   return Product(
     id: json['id'] ?? '',

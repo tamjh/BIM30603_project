@@ -215,10 +215,8 @@ class ItemSection extends StatelessWidget {
                 onTap: () {},
                 child: SizedBox(
                   width: MediaQuery.of(context).size.width * 0.5, // Fixed width for each item
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      SizedBox(
+
+                      child : SizedBox(
                         width: MediaQuery.of(context).size.width * 0.5, // Adjust width as needed
                         child: SectionItem(
                           id: item['id'] ?? '',
@@ -226,11 +224,11 @@ class ItemSection extends StatelessWidget {
                           brand: item['brand'] ?? '',
                           price: item['price'] ?? '',
                           imagePath: item['imagePath'] ?? '',
-                          ratio: 0.4,
+                          ratio: 0.6,
                         ),
                       ),
-                    ],
-                  ),
+
+
                 ),
               );
             },

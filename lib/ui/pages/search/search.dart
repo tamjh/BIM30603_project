@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/pages/main/main.dart';
 import 'package:project/ui/pages/search/search_content.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project/ui/shared/drawer/drawer.dart';
 
 class SearchScreen extends StatelessWidget {
   static final String routeName = "/search";
@@ -13,11 +13,9 @@ class SearchScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text("Search", style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 40.sp)),
         centerTitle: true,
-        automaticallyImplyLeading: false
-        // leading: IconButton(onPressed: (){
-        //   Navigator.pushNamed(context, HYMainScreen.routeName);
-        // }, icon: Icon(Icons.arrow_back_ios, weight: 10,)),
+
       ),
+      drawer: DrawerDisplay(),
       body: SearchContent(),
     );
   }

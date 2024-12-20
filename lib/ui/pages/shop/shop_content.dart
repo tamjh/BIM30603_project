@@ -84,7 +84,9 @@ class _ShopContentState extends State<ShopContent> {
               const Icon(Icons.filter_list),
               Text(
                 "Filter: ",
-                style: Theme.of(ctx).textTheme.displayLarge,
+                style: Theme.of(ctx).textTheme.displayLarge?.copyWith(
+                      fontSize: 24.sp,
+                    ),
               ),
             ],
           ),

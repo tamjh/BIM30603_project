@@ -23,4 +23,18 @@ class UserModel {
       phone: map['phone'] ?? '',
     );
   }
+
+  UserModel copyWith({
+    String? uid,
+    String? email,
+    String? name,
+    String? phone,
+  }) {
+    return UserModel(
+      uid: uid ?? this.uid,
+      email: email ?? this.email,
+      name: name ?? this.name,
+      phone: phone ?? this.phone,
+    );
+  }
 }

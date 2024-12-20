@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:project/core/model/address_model.dart';
 import 'package:project/ui/pages/edit_address/edit_address_content.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class EditAddress extends StatelessWidget {
   static final String routeName = "/edit_address";
-  const EditAddress({super.key});
+  final Address? address;
+  const EditAddress({super.key, required this.address});
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class EditAddress extends StatelessWidget {
               ?.copyWith(fontSize: 35.sp),
         ),
       ),
-      body: EditAddressContent(),
+      body: EditAddressContent(address: address),
     );
   }
 }
