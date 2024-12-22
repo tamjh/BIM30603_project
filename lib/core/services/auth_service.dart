@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:project/core/model/UserModel.dart';
-import 'package:project/core/model/address_model.dart';
 
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -77,7 +76,7 @@ class AuthService {
           uid: firebaseUser.uid,
           email: firebaseUser.email ?? '',
           name: name,
-          phone: phone ?? '',
+          phone: phone,
         );
       }
     } catch (e) {

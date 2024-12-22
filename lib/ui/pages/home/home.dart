@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:project/core/viewmodel/user_view_model.dart';
 import 'package:project/ui/pages/home/home_content.dart';
 import 'package:project/ui/shared/app_theme.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project/ui/shared/drawer/drawer.dart';
-import 'package:provider/provider.dart';
 
 class HYHomeScreen extends StatelessWidget {
   static final String routeName = "/home";

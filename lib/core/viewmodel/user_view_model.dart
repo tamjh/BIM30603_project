@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project/core/model/UserModel.dart';
-import 'package:project/core/model/address_model.dart';
 import 'package:project/core/services/auth_service.dart';
 import 'package:project/ui/widgets/errorMsg.dart';
 

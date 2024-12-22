@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project/core/model/UserModel.dart';
-import 'package:project/core/model/address_model.dart';
 import 'package:project/core/viewmodel/address_view_model.dart';
 import 'package:project/core/viewmodel/user_view_model.dart';
 import 'package:project/ui/pages/edit_address/edit_address.dart';
