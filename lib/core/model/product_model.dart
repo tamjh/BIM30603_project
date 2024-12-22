@@ -1,25 +1,23 @@
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-//ProductModel is use to manage multiple product into a List
-//use <ProductModel> while collection of product
+// ProductModel is used to manage multiple products in a list
+// Use <ProductModel> when working with a collection of products
 class ProductModel {
-  //many product in list
   List<Product> products;
 
-  //constructor
   ProductModel({
     required this.products,
   });
 
-  //get data from firstore
-  //then store in products list
+  // Get data from Firestore and store in products list
   factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         products: List<Product>.from(
-            json['products'].map((x) => Product.fromJson(x))),
+          json['products'].map((x) => Product.fromJson(x)),
+        ),
       );
 }
 
-//for one product
+// Represents a single product
 class Product {
   String id;
   String name;
@@ -27,7 +25,8 @@ class Product {
   num price;
   String category;
   String brand_id;
-  List<Detail> description; // Now description is a list of details.
+  List<Detail> description;
+  DateTime created_at;
 
   Product({
     required this.id,
@@ -37,55 +36,39 @@ class Product {
     required this.category,
     required this.brand_id,
     required this.description,
+    required this.created_at,
   });
 
 factory Product.fromJson(Map<String, dynamic> json) {
-  // Fetch description
-  var descriptionData = json['description'];
-  // print('Raw description data: $descriptionData'); // Debugging line
-
-  // Replace escaped newline character (\n or \\n) with actual newline
-  descriptionData = descriptionData.replaceAll(r'\n', '\n');  // Handle escaped newline
-
-  // Verify and print each character to see if the newline is \n, \r, or \r\n
-  // print('Raw description characters:');
-
+  var descriptionData = json['description'] ?? '';
 
   List<Detail> description = [];
-
   if (descriptionData is String) {
-    // Now split the description using the actual newline character
-    description = descriptionData
-        .split('\n') // Split by actual newline character
-        .map((line) => line.trim())  // Remove leading/trailing spaces
-        .where((line) => line.isNotEmpty)  // Filter out empty lines
+    // First, replace the literal '\n' with actual newlines
+    var processedString = descriptionData.replaceAll('\\n', '\n');
+    
+    // Split by actual newlines
+    description = processedString
+        .split('\n')
+        .where((line) => line.trim().isNotEmpty) // Skip empty lines
         .map((line) {
           var parts = line.split(':');
-          if (parts.length >= 2) {
-            // Proper key-value pair found
-            return Detail(
-              key: parts[0].trim(),
-              value: parts[1].trim(),
-            );
-          } else {
-            // If no key-value pair exists (like the case with "Colour"), treat the line as a key
-            return Detail(
-              key: parts[0].trim(),
-              value: '', // Empty value for incomplete lines
-            );
-          }
-        }).toList();
+          
+          // if (parts.length < 2) {
+          //   return Detail(key: parts[0].trim(), value: 'N/A');
+          // }
+
+          return Detail(
+            key: parts[0].trim(),
+            value: parts.sublist(1).join(':').trim(), // Handle values that might contain colons
+          );
+        })
+        .toList();
   } else if (descriptionData is List) {
-    // If description is already a list, parse each item as a Detail object
     description = List<Detail>.from(
       descriptionData.map((x) => Detail.fromJson(x)),
     );
   }
-
-  // Print cleaned description data
-  // description.forEach((detail) {
-  //   print('Description Key: ${detail.key}, Value: ${detail.value}');
-  // });
 
   return Product(
     id: json['id'] ?? '',
@@ -95,6 +78,9 @@ factory Product.fromJson(Map<String, dynamic> json) {
     category: json['category'] ?? '',
     brand_id: json['brand_id'] ?? '',
     description: description,
+    created_at: json['created_at'] is Timestamp
+        ? (json['created_at'] as Timestamp).toDate()
+        : DateTime.now(),
   );
 }
 
@@ -106,6 +92,7 @@ factory Product.fromJson(Map<String, dynamic> json) {
         'category': category,
         'brand_id': brand_id,
         'description': List<dynamic>.from(description.map((x) => x.toJson())),
+        'created_at': created_at.toIso8601String(),
       };
 }
 
@@ -127,4 +114,9 @@ class Detail {
         'key': key,
         'value': value,
       };
+
+  @override
+  String toString() {
+    return '$key: $value'; // Override to print the key and value
+  }
 }

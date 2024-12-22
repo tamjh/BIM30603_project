@@ -18,7 +18,7 @@ ABOUT PRODUCT
 -------------------------------------------------------------------------
 */
   // Get certain product detail
-  Future<Product> getProductDetails(String id) async {
+Future<Product> getProductDetails(String id) async {
     if (id.isEmpty) throw Exception("Product ID cannot be empty.");
 
     try {
@@ -27,7 +27,7 @@ ABOUT PRODUCT
       if (doc.exists) {
         return Product.fromJson({
           ...doc.data() as Map<String, dynamic>,
-          'id': doc.id, // Add document ID
+          'id': doc.id,
         });
       } else {
         throw Exception("Product with ID $id not found.");
@@ -37,7 +37,7 @@ ABOUT PRODUCT
     }
   }
 
-  // Get all products
+  // Fetch all products
   Future<List<Product>> fetchProducts() async {
     try {
       final querySnapshot = await _productRef.get();
@@ -45,13 +45,14 @@ ABOUT PRODUCT
       return querySnapshot.docs.map((doc) {
         return Product.fromJson({
           ...doc.data() as Map<String, dynamic>,
-          'id': doc.id, // Add document ID
+          'id': doc.id,
         });
       }).toList();
     } catch (e) {
       throw Exception("Error fetching products: $e");
     }
   }
+
 
 /* -----------------------------------------------------------------------
 

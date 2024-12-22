@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project/core/viewmodel/home_view_modal.dart';
 import 'package:project/core/viewmodel/index_view_model.dart';
+import 'package:project/core/viewmodel/product_view_modal.dart';
+import 'package:project/core/viewmodel/search_view_model.dart';
 import 'package:project/ui/widgets/item_display.dart';
 import 'package:provider/provider.dart';
 
@@ -24,8 +26,7 @@ class _HYHomeContentState extends State<HYHomeContent> {
 
   @override
   Widget build(BuildContext context) {
-    final homeViewModel = Provider.of<HomeViewModel>(context);
-
+    final productViewModel = Provider.of<ProductViewModel>(context, listen: false);
     return Consumer<HomeViewModel>(
       builder: (context, viewModel, child) {
         if (viewModel.isLoading) {
@@ -35,9 +36,9 @@ class _HYHomeContentState extends State<HYHomeContent> {
         return ListView(
           children: [
             const HeaderLabel(),
-            const SearchBar(),
+            SearchBar(productViewModel: productViewModel),
             SizedBox(height: 10.h),
-            const CategoriesSection(),
+            CategoriesSection(productViewModel: productViewModel),
             SizedBox(height: 10.h),
             ItemSection(
               title: "Hot",
@@ -47,7 +48,7 @@ class _HYHomeContentState extends State<HYHomeContent> {
                   'name': product.name,
                   'price': product.price,
                   'brand': product.brand,
-                  'imagePath': product.image ?? 'assets/images/ph.png',
+                  'imagePath': product.image,
                 };
               }).toList(),
             ),
@@ -60,7 +61,7 @@ class _HYHomeContentState extends State<HYHomeContent> {
                   'name': product.name,
                   'price': product.price,
                   'brand': product.brand,
-                  'imagePath': product.image ?? 'assets/images/ph.png',
+                  'imagePath': product.image,
                 };
               }).toList(),
             ),
@@ -88,66 +89,130 @@ class HeaderLabel extends StatelessWidget {
 }
 
 class SearchBar extends StatelessWidget {
-  const SearchBar({super.key});
+  final TextEditingController searchController = TextEditingController();
+  final ProductViewModel productViewModel;
+
+  SearchBar({required this.productViewModel, super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 30.h),
-      child: TextField(
-        decoration: InputDecoration(
-          border: const OutlineInputBorder(),
-          hintText: "Searching...",
-          label: const Text("Search"),
-          suffixIcon: const Icon(Icons.search),
+    return Consumer<SearchViewModel>(
+        builder: (context, searchviewmodel, child) {
+          return Container(
+            margin: EdgeInsets.symmetric(horizontal: 10.w, vertical: 30.h),
+            child: TextFormField(
+              controller: searchController,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(),
+                hintText: "Searching...",
+                label: const Text("Search"),
+                suffixIcon: IconButton(
+                    onPressed: () {
+                      searchviewmodel.updateSearchText(searchController.text);
+                      searchviewmodel.searchItems(
+                          searchviewmodel.searchText.toLowerCase().trim(),
+                          searchviewmodel.selectedBrands,
+                          productViewModel);
+                      context.read<NavigationViewModel>().setCurrentIndex(2);
+                    },
+                    icon: const Icon(Icons.search)),
+              ),
+            ),
+          );
+        });
+  }
+}
+
+class CategoriesSection extends StatelessWidget {
+  final List<String> categories = ['badminton', 'football', 'basketball', 'accessories'];
+  final ProductViewModel productViewModel;
+
+  CategoriesSection({required this.productViewModel, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    int numCategories = categories.length;
+    final double spacing = 10.w;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
+      child: Wrap(
+        alignment: WrapAlignment.spaceBetween,
+        spacing: spacing,
+        runSpacing: spacing,
+        children: List.generate(
+          numCategories,
+              (index) => CategoryItem(
+            productViewModel: productViewModel,
+            keyword: categories[index],
+          ),
         ),
       ),
     );
   }
 }
 
-class CategoriesSection extends StatelessWidget {
-  const CategoriesSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    const int numCategories = 4;
-    final double spacing = 10.w;
-
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w),
-      child: Wrap(
-        spacing: spacing,
-        runSpacing: spacing,
-        children: List.generate(numCategories, (index) => const CategoryItem()),
-      ),
-    );
-  }
-}
 
 class CategoryItem extends StatelessWidget {
-  const CategoryItem({super.key});
+  final String keyword;
+  final ProductViewModel productViewModel;
+
+  CategoryItem({required this.productViewModel, required this.keyword, super.key});
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     double spacing = 10.w;
     final double availableWidth = screenWidth - (spacing * 5);
-    final double radius = availableWidth / 4 / 2;
+    final double radius = availableWidth / 4 / 3;
 
-    return Container(
-      width: radius * 2,
-      height: radius * 2,
-      decoration: const BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.grey,
-      ),
-    );
+    return Consumer<SearchViewModel>(
+        builder: (context, searchViewModel, child) {
+          return GestureDetector(
+            onTap: () {
+              searchViewModel.clearSearch();
+              searchViewModel.addSelected(keyword);
+              searchViewModel.searchItems(
+                  searchViewModel.searchText.toLowerCase().trim(),
+                  searchViewModel.selectedBrands,
+                  productViewModel);
+              context.read<NavigationViewModel>().setCurrentIndex(2);
+            },
+            child: Container(
+              width: radius * 2,
+              height: radius * 2,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(radius),
+                child: Image.asset(
+                  'assets/images/pro/$keyword.png',
+                  fit: BoxFit.cover,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      color: Colors.grey[300],
+                      child: Center(
+                        child: Icon(
+                          Icons.error,
+                          color: Colors.red,
+                          size: radius,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
 
+
 class SectionTitle extends StatefulWidget {
   final String title;
+
   const SectionTitle({required this.title, super.key});
 
   @override
@@ -171,7 +236,7 @@ class _SectionTitleState extends State<SectionTitle> {
           ),
           GestureDetector(
             onTap: () {
-              context.read<NavigationViewModel>().setCurrentIndex(3);
+              context.read<NavigationViewModel>().setCurrentIndex(2);
             },
             child: Row(
               children: [
@@ -214,21 +279,21 @@ class ItemSection extends StatelessWidget {
               return GestureDetector(
                 onTap: () {},
                 child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.5, // Fixed width for each item
+                  width: MediaQuery.of(context).size.width *
+                      0.5, // Fixed width for each item
 
-                      child : SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.5, // Adjust width as needed
-                        child: SectionItem(
-                          id: item['id'] ?? '',
-                          name: item['name'] ?? '',
-                          brand: item['brand'] ?? '',
-                          price: item['price'] ?? '',
-                          imagePath: item['imagePath'] ?? '',
-                          ratio: 0.6,
-                        ),
-                      ),
-
-
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width *
+                        0.5, // Adjust width as needed
+                    child: SectionItem(
+                      id: item['id'] ?? '',
+                      name: item['name'] ?? '',
+                      brand: item['brand'] ?? '',
+                      price: item['price'] ?? '',
+                      imagePath: item['imagePath'] ?? '',
+                      ratio: 0.6,
+                    ),
+                  ),
                 ),
               );
             },

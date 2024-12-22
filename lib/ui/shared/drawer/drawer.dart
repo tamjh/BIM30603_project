@@ -11,6 +11,7 @@ class DrawerDisplay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<UserViewModel>(builder: (context, viewModel, child) {
       return Drawer(
+        
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
                 topRight: Radius.circular(50),

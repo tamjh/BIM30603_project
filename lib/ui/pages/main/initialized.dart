@@ -6,7 +6,7 @@ import 'package:project/ui/pages/shop/shop.dart';
 
 final List<Widget> pages = [
   HYHomeScreen(),
-  SearchScreen(),
+  // SearchScreen(),
   HYHomeScreen(),
   ShopScreen(),
   CartScreen(),
@@ -14,7 +14,7 @@ final List<Widget> pages = [
 
 final List<BottomNavigationBarItem> items = [
   buildBottomNavItem(Icons.home_outlined, "Home", Icons.home),
-  buildBottomNavItem(Icons.search, "Search", Icons.search),
+  // buildBottomNavItem(Icons.search, "Search", Icons.search),
   buildBottomNavItem(Icons.favorite_outline, "Favourite", Icons.favorite),
   buildBottomNavItem(Icons.trolley, "Shop", Icons.trolley),
   buildBottomNavItem(Icons.shopping_bag_outlined, "Cart", Icons.shopping_bag),

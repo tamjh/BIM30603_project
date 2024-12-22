@@ -6,7 +6,7 @@ import 'package:project/core/model/product_model.dart'; // Import your ProductMo
 class ProductDetailContent extends StatelessWidget {
   final String id;
 
-  ProductDetailContent({required this.id, super.key});
+  const ProductDetailContent({required this.id, super.key});
 
   Future<Product> fetchProductDetails() async {
     // Instantiate your ProductService and fetch the product details
@@ -17,25 +17,31 @@ class ProductDetailContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final double screenWdith = MediaQuery.of(context).size.width;
-    final double imageWidth = screenWdith * 0.6;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double imageWidth = screenWidth * 0.6;
     final double imageHeight = imageWidth * 1.6;
 
     return FutureBuilder<Product>(
       future: fetchProductDetails(), // Fetch product details
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-              child: CircularProgressIndicator()); // Show loading indicator
+          return const Center(
+            child: CircularProgressIndicator(),
+          ); // Show loading indicator
         } else if (snapshot.hasError) {
           return Center(
-              child: Text(
-                  "Error: ${snapshot.error}")); // Show error message if there's an error
+            child: Text("Error: ${snapshot.error}"), // Show error message
+          );
         } else if (!snapshot.hasData) {
-          return Center(child: Text("Product not found"));
+          return const Center(
+            child: Text("Product not found"),
+          );
         } else {
           final product = snapshot.data!; // Get the product data
-          
+
+          // Debugging: Print the product description to the console
+          print('Product description: ${product.description}');
+
           return Column(
             children: [
               Expanded(
@@ -44,7 +50,8 @@ class ProductDetailContent extends StatelessWidget {
                     Image.asset(
                       "assets/images/pro/${product.image}.png", // Display product image
                       width: imageWidth,
-                      height: imageHeight*0.5, // Adjust height for responsiveness
+                      height:
+                          imageHeight * 0.5, // Adjust height for responsiveness
                       fit: BoxFit.contain, // Ensure the image fits nicely
                     ),
                     Padding(
@@ -72,7 +79,7 @@ class ProductDetailContent extends StatelessWidget {
                                   product.brand_id, // Display brand
                                   style: Theme.of(context)
                                       .textTheme
-                                      .displayMedium
+                                      .displaySmall
                                       ?.copyWith(
                                         color: Colors.grey,
                                         fontSize: 16.sp, // Responsive font size
@@ -84,15 +91,14 @@ class ProductDetailContent extends StatelessWidget {
                           Expanded(
                             flex: 1,
                             child: Align(
-                              alignment: Alignment
-                                  .centerRight,
+                              alignment: Alignment.centerRight,
                               child: Text(
-                                "RM ${product.price}", 
+                                "RM ${product.price}", // Display price
                                 style: Theme.of(context)
                                     .textTheme
                                     .displayLarge
                                     ?.copyWith(
-                                      fontSize: 22.sp, 
+                                      fontSize: 22.sp, // Responsive font size
                                     ),
                               ),
                             ),
@@ -105,13 +111,13 @@ class ProductDetailContent extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          // Ensure description is split properly by '\n'
                           if (product.description.isNotEmpty)
-                            for (var descirption in product.description)
+                            // Loop through the List<Detail> and display each key and value
+                            for (var detail in product.description)
                               Padding(
                                 padding: EdgeInsets.only(bottom: 8.sp),
                                 child: Text(
-                                  "${descirption.key} : ${descirption.value}", // Display each description line
+                                  "${detail.key}: ${detail.value}", // Display the key and value from the Detail object
                                   style: Theme.of(context)
                                       .textTheme
                                       .displayMedium
@@ -121,7 +127,6 @@ class ProductDetailContent extends StatelessWidget {
                                   textAlign: TextAlign.justify,
                                 ),
                               ),
-                          // Fallback in case description is empty or not properly formatted
                           if (product.description.isEmpty)
                             Text(
                               "No description available",
@@ -150,7 +155,7 @@ class ProductDetailContent extends StatelessWidget {
     );
   }
 
-  Widget buildButtons(BuildContext ctx) {
+  Widget buildButtons(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 10.w), // Responsive padding
       child: Row(
@@ -164,12 +169,15 @@ class ProductDetailContent extends StatelessWidget {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.red),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  // Add to cart functionality here
+                },
                 child: Text(
                   "Add to cart",
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.sp), // Responsive font size
+                    color: Colors.white,
+                    fontSize: 18.sp, // Responsive font size
+                  ),
                 ),
               ),
             ),
@@ -183,12 +191,15 @@ class ProductDetailContent extends StatelessWidget {
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.red),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  // Pay now functionality here
+                },
                 child: Text(
                   "Pay now",
                   style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18.sp), // Responsive font size
+                    color: Colors.white,
+                    fontSize: 18.sp, // Responsive font size
+                  ),
                 ),
               ),
             ),

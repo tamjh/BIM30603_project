@@ -55,6 +55,7 @@ class SectionItem extends StatelessWidget {
                   child: Image.asset(
                     "assets/images/pro/$imagePath.png",
                     width: itemWidth,
+                    height: itemWidth * 0.7,
                     fit: BoxFit.cover,
                   ),
                 ),

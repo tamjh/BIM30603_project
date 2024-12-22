@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/ui/pages/search/search_content.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:project/ui/shared/drawer/drawer.dart';
 
 class SearchScreen extends StatelessWidget {
   static final String routeName = "/search";
@@ -15,7 +14,6 @@ class SearchScreen extends StatelessWidget {
         centerTitle: true,
 
       ),
-      drawer: DrawerDisplay(),
       body: SearchContent(),
     );
   }

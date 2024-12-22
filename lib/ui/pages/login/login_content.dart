@@ -4,6 +4,7 @@ import 'package:project/core/model/UserModel.dart';
 import 'package:project/ui/pages/register/register.dart';
 import 'package:project/ui/pages/main/main.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project/ui/widgets/errorMsg.dart';
 import 'package:provider/provider.dart';
 import 'package:project/core/viewmodel/user_view_model.dart';
 
@@ -177,12 +178,7 @@ class _HYLoginContentState extends State<HYLoginContent> {
         Navigator.pushNamed(context, HYMainScreen.routeName);
       }
     } catch (e) {
-      print(e);
-
-      // Show error message to the user
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(e.toString())),
-      );
+      SnackbarUtils.showErrorMessage(context, e.toString());
     }
   }
 }

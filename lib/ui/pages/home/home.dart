@@ -19,7 +19,7 @@ class HYHomeScreen extends StatelessWidget {
           child: Text(
             "Vix Sport",
             style: HYAppTheme.normalTheme.textTheme.displayLarge
-                ?.copyWith(fontWeight: FontWeight.bold, fontSize: 48.h),
+                ?.copyWith(fontWeight: FontWeight.bold, fontSize: 32.h),
           ),
         ),
       ),

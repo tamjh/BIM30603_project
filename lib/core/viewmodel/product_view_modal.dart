@@ -5,7 +5,7 @@ import 'package:project/core/services/product_service.dart';
 class ProductViewModel extends ChangeNotifier {
   /// -----------------------------------------------------------------
   ///
-  ///  Variable
+  ///  Variables
   ///
   /// -----------------------------------------------------------------
   final Product? _product;
@@ -30,7 +30,7 @@ class ProductViewModel extends ChangeNotifier {
 
   /// -----------------------------------------------------------------
   ///
-  ///  Getter
+  ///  Getters
   ///
   /// -----------------------------------------------------------------
   List<Product> get products => _products ?? [];
@@ -42,6 +42,7 @@ class ProductViewModel extends ChangeNotifier {
   num get price => _product?.price ?? 0;
   String get category => _product?.category ?? '';
   String get brand => _product?.brand_id ?? '';
+  DateTime get created_at => _product?.created_at ?? DateTime.now();
 
   // Format description for single product
   List<String> get description => _product != null
@@ -56,7 +57,7 @@ class ProductViewModel extends ChangeNotifier {
 
   /// -----------------------------------------------------------------
   ///
-  ///  Future
+  ///  Futures
   ///
   /// -----------------------------------------------------------------
   // Fetch all products (for multiple products scenario)
@@ -66,27 +67,32 @@ class ProductViewModel extends ChangeNotifier {
       _products = products;
       notifyListeners();
     } catch (e) {
-      print("Error fetching products: $e");
       throw Exception("Error fetching products: $e");
     }
   }
 
-  // Fetch product details (for single product scenario)
   Future<Product> fetchProductDetails(String id) async {
     try {
       final product = await _productService.getProductDetails(id);
       return product;
     } catch (e) {
-      print("Error fetching product details: $e");
       throw Exception("Error fetching product details: $e");
     }
   }
 
+
   /// -----------------------------------------------------------------
   ///
-  ///  function
+  ///  Methods
   ///
   /// -----------------------------------------------------------------
+  // Method to update the products list
+  void updateProducts(List<Product> newProducts) {
+    _products = newProducts;
+    //debugging();
+    notifyListeners(); // Notify listeners to update the UI
+  }
+
   // Method to toggle favourite status
   void toggleFavouriteStatus() {
     isFavourite = !isFavourite;
@@ -94,7 +100,30 @@ class ProductViewModel extends ChangeNotifier {
 
   // Method to check if the product is favourite
   bool isProductFavourite(String productId) {
-    // Implement your logic to check if a product is in the favourites list
     return isFavourite; // Simplified logic, you can extend this for a list of favourites
+  }
+
+  void sortProducts(String criteria) {
+    if (criteria == "Price: Lowest to Highest") {
+      _products?.sort((a, b) => a.price.compareTo(b.price));
+    } else if (criteria == "Price: Highest to Lowest") {
+      _products?.sort((a, b) => b.price.compareTo(a.price));
+    } else if (criteria == "Latest") {
+      _products?.sort((a, b) =>
+          b.created_at.compareTo(a.created_at)); // Assuming dateAdded field
+    }
+    
+    notifyListeners();
+  }
+
+  void debugging() {
+    print("Debugging");
+    products.forEach((product) {
+      print("----------------------");
+      print(product.id);
+      print(product.name);
+      print(product.description.first.value);
+      print("----------------------");
+    });
   }
 }
