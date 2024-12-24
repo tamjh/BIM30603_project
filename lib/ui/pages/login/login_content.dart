@@ -116,7 +116,7 @@ class _HYLoginContentState extends State<HYLoginContent> {
   Widget buildArrow(BuildContext ctx) {
     return GestureDetector(
       onTap: () {
-        print("Navigating to Register Page");
+
 
         // Navigating to Register screen
         Navigator.pushNamed(ctx, HYRegister.routeName);

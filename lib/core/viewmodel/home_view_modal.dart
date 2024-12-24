@@ -34,7 +34,7 @@ class HomeViewModel extends ChangeNotifier {
 
       if (_userViewModel.currentUser == null) {
         // Handle the case when currentUser is null
-        print('User is not logged in');
+        //print('From home vm: User is not logged in');
         return;
       }
 

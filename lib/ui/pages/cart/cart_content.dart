@@ -1,150 +1,163 @@
 import 'package:flutter/material.dart';
-import 'package:project/ui/pages/payment/payment.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:project/core/model/product_model.dart';
+import 'package:project/core/viewmodel/cart_view_model.dart';
+import 'package:provider/provider.dart';
 
-class CartContent extends StatelessWidget {
+import 'BuildButtons.dart';
+import 'BuildTotal.dart';
+
+class CartContent extends StatefulWidget {
   const CartContent({super.key});
 
   @override
+  State<CartContent> createState() => _CartContentState();
+}
+
+class _CartContentState extends State<CartContent> {
+  @override
+  void initState() {
+    super.initState();
+    // Fetch cart items immediately after widget is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        Provider.of<CartViewModel>(context, listen: false).getAllCart();
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final double _imageRadius = 120.sp;
-    return Container(
-      child: Column(
-        children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Padding(
+    final double _imageRadius = 88.sp;
+
+    return Consumer<CartViewModel>(
+      builder: (context, cartViewModel, child) {
+        // Show loading indicator while data is being fetched
+        if (cartViewModel.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        // Show empty cart message if no items
+        if (cartViewModel.cartItems.isEmpty) {
+          return const Center(child: Text("Cart is empty."));
+        }
+
+        // Show cart items
+        return Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: cartViewModel.cartItems.length,
+                itemBuilder: (context, index) {
+                  return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 8.0),
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: buildImage(_imageRadius),
+                          child: buildImage(
+                              _imageRadius, cartViewModel.cartItems[index].product.image),
                         ),
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              buildName(context),
-                              buildQuantity(context),
+                              buildName(
+                                  context, cartViewModel.cartItems[index].product.name),
+                              buildQuantity(
+                                context,
+                                cartViewModel,
+                                cartViewModel.cartItems[index].product,
+                                cartViewModel.cartItems[index].quantity,
+                              ),
                             ],
                           ),
                         ),
-                        buildPrice(context),
-                        SizedBox(
-                          width: 10.w,
-                        )
+                        buildPrice(
+                          context,
+                          cartViewModel,
+                          cartViewModel.cartItems[index].product.price.toStringAsFixed(2),
+                          cartViewModel.cartItems[index].product,
+                        ),
+                        SizedBox(width: 10.w),
                       ],
-                    ));
-              },
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-          buildTotal(context),
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 20),
-            child: buildButtons(context),
-          ),
-        ],
-      ),
+            if (!cartViewModel.isLoading && cartViewModel.cartItems.isNotEmpty) ...[
+              BuildTotal(total: cartViewModel.getTotalPrice().toStringAsFixed(2)),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 20),
+                child: BuildButtons(),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 
-  Padding buildTotal(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "Total amount: ",
-            style: Theme.of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(fontSize: 30.sp),
-          ),
-          Text(
-            "RM 520.50",
-            style: Theme.of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(fontSize: 25.sp),
-          )
-        ],
-      ),
-    );
-  }
-
-  Column buildPrice(BuildContext context) {
+  // Helper methods (same as your original implementation)
+  Column buildPrice(BuildContext context, CartViewModel cvm, String price, Product product) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min, // Ensure compact size for the column
       children: [
         IconButton(
-          onPressed: () {},
-          icon: Icon(Icons.delete, size: 30.sp),
+          onPressed: () {
+            cvm.removeFromCart(product);
+          },
+          icon: Icon(Icons.delete, size: 24.sp),
         ),
         Text(
-          "RM 120.50",
+          "RM$price",
           style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 20.sp),
         ),
       ],
     );
   }
 
-  Row buildQuantity(BuildContext context) {
+  Row buildQuantity(BuildContext context, CartViewModel cartViewModel, Product product, int quantity) {
     return Row(
       children: [
-        // Decrease button
         GestureDetector(
           onTap: () {
-            // Handle decrement logic
+            cartViewModel.itemDecrement(product);
           },
           child: Container(
-            padding: const EdgeInsets.all(12.0), // Increased padding
+            padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.grey[300],
             ),
             child: Text(
               "-",
-              style: TextStyle(
-                fontSize: 20.sp, // Increased font size
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
             ),
           ),
         ),
         Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 16.0), // Adjusted spacing
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Text(
-            "1",
-            style: Theme.of(context)
-                .textTheme
-                .displayMedium
-                ?.copyWith(fontSize: 25.sp),
+            "$quantity",
+            style: Theme.of(context).textTheme.displayMedium?.copyWith(fontSize: 25.sp),
           ),
         ),
-        // Increase button
         GestureDetector(
           onTap: () {
-            // Handle increment logic
+            cartViewModel.itemIncrement(product);
           },
           child: Container(
-            padding: const EdgeInsets.all(12.0), // Increased padding
+            padding: const EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: Colors.grey[300],
             ),
             child: Text(
               "+",
-              style: TextStyle(
-                fontSize: 20.sp, // Increased font size
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
             ),
           ),
         ),
@@ -152,73 +165,21 @@ class CartContent extends StatelessWidget {
     );
   }
 
-  Text buildName(BuildContext context) {
+  Text buildName(BuildContext context, String productName) {
     return Text(
-      "Product A",
-      style:
-          Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 25.sp),
+      maxLines: 2,
+      overflow: TextOverflow.ellipsis,
+      productName,
+      style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 16.sp),
     );
   }
 
-  Image buildImage(double radius) {
+  Image buildImage(double radius, String img) {
     return Image.asset(
-      "assets/images/ph.png",
+      "assets/images/pro/$img.png",
       width: radius,
       height: radius,
       fit: BoxFit.cover,
-    );
-  }
-
-  Row buildButtons(BuildContext ctx) {
-    return Row(
-      children: [
-        // Discard Button
-        Expanded(
-          child: Container(
-            height: 50,
-            margin: const EdgeInsets.symmetric(horizontal: 5.0), // Adds spacing
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(
-                  const Color.fromARGB(255, 249, 249, 249),
-                ),
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50.0),
-                    side: BorderSide(color: Colors.black, width: 2.w),
-                  ),
-                ),
-              ),
-              onPressed: () {
-                
-              },
-              child: Text(
-                "Discard",
-                style: TextStyle(color: Colors.black),
-              ),
-            ),
-          ),
-        ),
-        // Check Out Button
-        Expanded(
-          child: Container(
-            height: 50,
-            margin: const EdgeInsets.symmetric(horizontal: 5.0), // Adds spacing
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all(Colors.red),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(ctx, PaymentScreen.routeName);
-              },
-              child: Text(
-                "Check Out",
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

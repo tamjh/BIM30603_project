@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:project/core/services/product_service.dart'; // Your product service import
-import 'package:project/core/model/product_model.dart'; // Import your ProductModel
+import 'package:project/core/services/product_service.dart';
+import 'package:project/core/model/product_model.dart';
+import 'package:project/core/viewmodel/cart_view_model.dart';
+import 'package:project/ui/widgets/errorMsg.dart';
+import 'package:provider/provider.dart';
 
 class ProductDetailContent extends StatelessWidget {
   final String id;
@@ -9,39 +12,28 @@ class ProductDetailContent extends StatelessWidget {
   const ProductDetailContent({required this.id, super.key});
 
   Future<Product> fetchProductDetails() async {
-    // Instantiate your ProductService and fetch the product details
     final productService = ProductService();
-    return await productService
-        .getProductDetails(id); // Ensure this returns a single Product
+    return await productService.getProductDetails(id);
   }
 
   @override
   Widget build(BuildContext context) {
+    final cartViewModel = Provider.of<CartViewModel>(context, listen: false);
     final double screenWidth = MediaQuery.of(context).size.width;
     final double imageWidth = screenWidth * 0.6;
     final double imageHeight = imageWidth * 1.6;
 
     return FutureBuilder<Product>(
-      future: fetchProductDetails(), // Fetch product details
+      future: fetchProductDetails(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          ); // Show loading indicator
+          return const Center(child: CircularProgressIndicator());
         } else if (snapshot.hasError) {
-          return Center(
-            child: Text("Error: ${snapshot.error}"), // Show error message
-          );
+          return Center(child: Text("Error: ${snapshot.error}"));
         } else if (!snapshot.hasData) {
-          return const Center(
-            child: Text("Product not found"),
-          );
+          return const Center(child: Text("Product not found"));
         } else {
-          final product = snapshot.data!; // Get the product data
-
-          // Debugging: Print the product description to the console
-          print('Product description: ${product.description}');
-
+          final product = snapshot.data!;
           return Column(
             children: [
               Expanded(
@@ -51,7 +43,7 @@ class ProductDetailContent extends StatelessWidget {
                       "assets/images/pro/${product.image}.png", // Display product image
                       width: imageWidth,
                       height:
-                          imageHeight * 0.5, // Adjust height for responsiveness
+                      imageHeight * 0.5, // Adjust height for responsiveness
                       fit: BoxFit.contain, // Ensure the image fits nicely
                     ),
                     Padding(
@@ -71,8 +63,8 @@ class ProductDetailContent extends StatelessWidget {
                                       .textTheme
                                       .displayLarge
                                       ?.copyWith(
-                                        fontSize: 24.sp, // Responsive font size
-                                      ),
+                                    fontSize: 24.sp, // Responsive font size
+                                  ),
                                   maxLines: 2,
                                 ),
                                 Text(
@@ -81,9 +73,9 @@ class ProductDetailContent extends StatelessWidget {
                                       .textTheme
                                       .displaySmall
                                       ?.copyWith(
-                                        color: Colors.grey,
-                                        fontSize: 16.sp, // Responsive font size
-                                      ),
+                                    color: Colors.grey,
+                                    fontSize: 16.sp, // Responsive font size
+                                  ),
                                 ),
                               ],
                             ),
@@ -98,8 +90,8 @@ class ProductDetailContent extends StatelessWidget {
                                     .textTheme
                                     .displayLarge
                                     ?.copyWith(
-                                      fontSize: 22.sp, // Responsive font size
-                                    ),
+                                  fontSize: 22.sp, // Responsive font size
+                                ),
                               ),
                             ),
                           ),
@@ -112,7 +104,7 @@ class ProductDetailContent extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           if (product.description.isNotEmpty)
-                            // Loop through the List<Detail> and display each key and value
+                          // Loop through the List<Detail> and display each key and value
                             for (var detail in product.description)
                               Padding(
                                 padding: EdgeInsets.only(bottom: 8.sp),
@@ -122,8 +114,8 @@ class ProductDetailContent extends StatelessWidget {
                                       .textTheme
                                       .displayMedium
                                       ?.copyWith(
-                                        fontSize: 16.sp, // Responsive font size
-                                      ),
+                                    fontSize: 16.sp, // Responsive font size
+                                  ),
                                   textAlign: TextAlign.justify,
                                 ),
                               ),
@@ -134,8 +126,8 @@ class ProductDetailContent extends StatelessWidget {
                                   .textTheme
                                   .displayMedium
                                   ?.copyWith(
-                                    fontSize: 16.sp, // Responsive font size
-                                  ),
+                                fontSize: 16.sp, // Responsive font size
+                              ),
                               textAlign: TextAlign.justify,
                             ),
                         ],
@@ -146,7 +138,7 @@ class ProductDetailContent extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 20.h),
-                child: buildButtons(context),
+                child: buildButtons(context, product, cartViewModel),
               ),
             ],
           );
@@ -155,51 +147,45 @@ class ProductDetailContent extends StatelessWidget {
     );
   }
 
-  Widget buildButtons(BuildContext context) {
+  Widget buildButtons(BuildContext context, Product product, CartViewModel cartViewModel) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10.w), // Responsive padding
+      padding: EdgeInsets.symmetric(horizontal: 10.w),
       child: Row(
         children: [
-          // Add to Cart Button
           Expanded(
             child: Container(
-              height: 50.h, // Adjust height based on screen height
+              height: 50.h,
               margin: EdgeInsets.symmetric(horizontal: 5.w),
               child: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.red),
                 ),
                 onPressed: () {
-                  // Add to cart functionality here
+                  cartViewModel.addToCart(context, product);
+                  Navigator.pop(context);
+
                 },
                 child: Text(
                   "Add to cart",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.sp, // Responsive font size
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 18.sp),
                 ),
               ),
             ),
           ),
-          // Pay Now Button
           Expanded(
             child: Container(
-              height: 50.h, // Adjust height based on screen height
+              height: 50.h,
               margin: EdgeInsets.symmetric(horizontal: 5.w),
               child: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all(Colors.red),
                 ),
                 onPressed: () {
-                  // Pay now functionality here
+                  // Handle payment logic
                 },
                 child: Text(
                   "Pay now",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18.sp, // Responsive font size
-                  ),
+                  style: TextStyle(color: Colors.white, fontSize: 18.sp),
                 ),
               ),
             ),
