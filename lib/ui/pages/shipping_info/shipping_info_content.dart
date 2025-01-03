@@ -113,10 +113,10 @@ class _ShippingInfoContentState extends State<ShippingInfoContent> {
         });
       },
       icon: const Icon(Icons.add),
-      label: Text("Add New Address", style: TextStyle(fontSize: 36.sp)),
+      label: Text("Add New Address", style: TextStyle(fontSize: 30.sp)),
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(
-            const Color.fromARGB(255, 248, 48, 17)),
+            const Color.fromARGB(190, 248, 48, 17)),
         foregroundColor: MaterialStateProperty.all(Colors.white),
       ),
     );

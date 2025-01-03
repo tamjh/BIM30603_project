@@ -17,7 +17,7 @@ class DrawerDisplay extends StatelessWidget {
                 topRight: Radius.circular(50),
                 bottomRight: Radius.circular(50)),
           ),
-          width: 300.w,
+          width: 250.w,
           backgroundColor: const Color.fromARGB(255, 230, 230, 230),
           child: ListView(
             children: [
@@ -48,7 +48,7 @@ class DrawerDisplay extends StatelessWidget {
     return ListTile(
       title: Text(
         name,
-        style: TextStyle(fontSize: 30.sp),
+        style: TextStyle(fontSize: 24.sp),
       ),
       trailing: next
           ? Icon(

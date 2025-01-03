@@ -37,6 +37,7 @@ class BuildButton extends StatelessWidget {
                     // Reset the search text and selections
                     searchViewModel.updateSearchText('');
                     searchViewModel.fetchKeywords();
+                    Navigator.pop(context); // Close the search modal
                   },
                   child: Text(
                     "Discard",

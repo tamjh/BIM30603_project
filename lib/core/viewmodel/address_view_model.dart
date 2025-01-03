@@ -11,6 +11,10 @@ class AddressViewModel extends ChangeNotifier {
 
   List<Address> get addresses => _addresses;
 
+  Address? _defaultAddress; // Add this property to your ViewModel class.
+
+  Address? get defaultAddress => _defaultAddress; // Getter for the default address.
+
   final AddressService _addressService = AddressService();
 
   void setLoading(bool value) {
@@ -92,7 +96,9 @@ class AddressViewModel extends ChangeNotifier {
     try {
       setLoading(true);
       await _addressService.setDefaultAddress(uid, addressId);
-      notifyListeners();
+      await getAddresses(uid); // Refresh the address list
+      _defaultAddress = _addresses.firstWhere((address) => address.id == addressId); // Ensure the default address is set.
+      notifyListeners(); // Notify listeners to update the UI
     } catch (e) {
       throw Exception("Failed to set default address: ${e.toString()}");
     } finally {
@@ -100,12 +106,22 @@ class AddressViewModel extends ChangeNotifier {
     }
   }
 
-  Future<Address?> getDefaultAddress(String uid) async {
+
+  Future<Address?> fetchDefaultAddress(String uid) async {
     try {
-      Address? address = await _addressService.getDefaultAddress(uid);
-      return address;
+      setLoading(true);
+      Address? defaultAddr = await _addressService.getDefaultAddress(uid);
+      _defaultAddress = defaultAddr;
+
+      return defaultAddr;
     } catch (e) {
       throw Exception("Failed to fetch default address: ${e.toString()}");
+    } finally {
+      setLoading(false);
     }
   }
+
+
+
+
 }

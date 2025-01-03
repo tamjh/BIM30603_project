@@ -7,6 +7,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:project/firebase_options.dart';
 import 'package:provider/provider.dart';
 
+import 'core/NavigatorObserver.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -16,7 +20,7 @@ void main() async {
   runApp(
     MultiProvider(
       providers: AppProviders.getProviders(),
-      child: const MyApp(),
+      child: MyApp(),
     ),
   );
 }
@@ -32,6 +36,9 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
+          navigatorKey: navigatorKey, // Use the global navigatorKey
+          navigatorObservers: [CurrentNavigationObserver()],
+
           debugShowCheckedModeBanner: false,
           theme: HYAppTheme.normalTheme,
           initialRoute: HYRouter.initialRoute,

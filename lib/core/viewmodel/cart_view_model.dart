@@ -10,11 +10,16 @@ class CartViewModel extends ChangeNotifier {
   final CartModel _cartModel = CartModel();
   final ProductViewModel _productViewModel;
   final String uid;
+  final String user_name;
+
+  bool _mounted = true;
+
 
   CartViewModel({
     required CartService cartService,
     required ProductViewModel productViewModel,
     required this.uid,
+    required this.user_name,
   })  : _cartService = cartService,
         _productViewModel = productViewModel {
     // Initialize cart data when ViewModel is created
@@ -41,15 +46,13 @@ class CartViewModel extends ChangeNotifier {
   }
 
   Future<void> getAllCart() async {
-    if (_isLoading) return; // Prevent multiple simultaneous calls
+    if (_isLoading) return;
 
     try {
       _isLoading = true;
-      notifyListeners();
-
+notifyListeners();
       List<CartItem> fetchedCartItems = await _cartService.getAllCart(uid, _productViewModel);
 
-      // Update the model and list
       _cartModel.updateCart(fetchedCartItems);
       cartItems = _cartModel.cart;
 
@@ -57,11 +60,11 @@ class CartViewModel extends ChangeNotifier {
       //print("Error fetching cart items: $e");
     } finally {
       _isLoading = false;
-      notifyListeners();
-    }
+notifyListeners();    }
   }
 
-  Future<void> addToCart(BuildContext ctx, Product product) async {
+
+  Future<void> addToCart(BuildContext ctx, Product product, int quantity) async {
     if (_isLoading) return;
 
     try {
@@ -70,8 +73,8 @@ class CartViewModel extends ChangeNotifier {
 
       // Check if product is already in cart before making any request
       if (!containsProduct(product)) {
-        await _cartService.addToCart(uid, product);  // Add product to the cart
-        _cartModel.addProduct(product); // Update the local cart
+        await _cartService.addToCart(uid, product, quantity);  // Add product to the cart
+        _cartModel.addProduct(product, quantity); // Update the local cart
         cartItems = _cartModel.cart;  // Refresh the local cart state
         SnackbarUtils.showMsg(ctx, "Product Added to Cart");
       } else {

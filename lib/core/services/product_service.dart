@@ -63,6 +63,10 @@ ABOUT FAVOURITE ITEM
 
   // Get all favs for a user
   Future<List<Favourite>> getFavItems(String userId) async {
+    if (userId.isEmpty) {
+      throw Exception("From product service: User ID cannot be empty.");
+    }
+
     try {
       final querySnapshot = await _userFavourites(userId).get();
 

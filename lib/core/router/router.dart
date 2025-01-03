@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:project/core/model/address_model.dart';
+import 'package:project/ui/pages/about_us/about.dart';
 import 'package:project/ui/pages/cart/cart.dart';
 import 'package:project/ui/pages/edit_address/edit_address.dart';
+import 'package:project/ui/pages/favourite/fav.dart';
 import 'package:project/ui/pages/home/home.dart';
 import 'package:project/ui/pages/login/login.dart';
 import 'package:project/ui/pages/main/main.dart';
@@ -12,6 +14,7 @@ import 'package:project/ui/pages/register/register.dart';
 import 'package:project/ui/pages/search/search.dart';
 import 'package:project/ui/pages/shipping_info/shipping_info.dart';
 import 'package:project/ui/pages/shop/shop.dart';
+import 'package:project/ui/pages/success/success_screen.dart';
 
 class HYRouter {
   static final String initialRoute = HYLogin.routeName;
@@ -35,7 +38,10 @@ class HYRouter {
     },
     PaymentScreen.routeName: (ctx) => PaymentScreen(),
     ShopScreen.routeName: (ctx) => ShopScreen(),
-    ProductDetailScreen.routeName: (ctx) => ProductDetailScreen()
+    ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
+    FavouriteScreen.routeName: (ctx) => FavouriteScreen(),
+    SuccessPurchasePage.routeName: (ctx) => SuccessPurchasePage(),
+    AboutUsScreen.routeName: (ctx) => AboutUsScreen()
   };
 
   static final RouteFactory generateRoute = (settings) => null;

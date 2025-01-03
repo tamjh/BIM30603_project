@@ -119,7 +119,7 @@ class _HYLoginContentState extends State<HYLoginContent> {
 
 
         // Navigating to Register screen
-        Navigator.pushNamed(ctx, HYRegister.routeName);
+        Navigator.pushNamedAndRemoveUntil(ctx, HYRegister.routeName, (route)=>false);
       },
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -142,7 +142,7 @@ class _HYLoginContentState extends State<HYLoginContent> {
   }
 
   Widget buildSubmitButton(BuildContext ctx, UserViewModel viewModel) {
-    final double buttonHeight = MediaQuery.of(context).size.height * 0.1;
+    final double buttonHeight = MediaQuery.of(context).size.height * 0.06;
     return Container(
       width: double.infinity,
       height: buttonHeight,
@@ -175,10 +175,10 @@ class _HYLoginContentState extends State<HYLoginContent> {
         // print("User Logged In: ${user.toMap()}");
 
         // Navigate to the main page
-        Navigator.pushNamed(context, HYMainScreen.routeName);
+        Navigator.pushNamedAndRemoveUntil(context, HYMainScreen.routeName, (route)=>false);
       }
     } catch (e) {
-      SnackbarUtils.showErrorMessage(context, e.toString());
+      SnackbarUtils.showErrorMessage(context, "Invalid Email or Passwod");
     }
   }
 }

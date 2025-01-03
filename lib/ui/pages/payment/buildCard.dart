@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import 'PaymentControllerManager.dart';
+
 class buildCard extends StatefulWidget {
-  const buildCard({super.key});
+
+  buildCard({super.key});
 
   @override
   State<buildCard> createState() => _buildCardState();
 }
 
 class _buildCardState extends State<buildCard> {
-    TextEditingController cardNumber = TextEditingController();
-  TextEditingController expDate = TextEditingController();
-  TextEditingController cvv = TextEditingController();
+
+  final paymentManager = PaymentControllerManager();
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -19,7 +22,7 @@ class _buildCardState extends State<buildCard> {
       child: Column(
         children: [
           TextFormField(
-            controller: cardNumber,
+            controller: paymentManager.cardNumber,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               label: Text("Card Number"),
@@ -31,7 +34,7 @@ class _buildCardState extends State<buildCard> {
             children: [
               Expanded(
                 child: TextFormField(
-                  controller: expDate,
+                  controller: paymentManager.expDate,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text("Expire Date"),
@@ -42,7 +45,7 @@ class _buildCardState extends State<buildCard> {
               SizedBox(width: 20.h),
               Expanded(
                 child: TextFormField(
-                  controller: cvv,
+                  controller: paymentManager.cvv,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     label: Text("CVV"),
@@ -54,6 +57,7 @@ class _buildCardState extends State<buildCard> {
           ),
         ],
       ),
-    );;
+    );
+    ;
   }
 }

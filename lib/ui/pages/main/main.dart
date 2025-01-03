@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:project/core/NavigatorObserver.dart';
 import 'package:project/core/viewmodel/index_view_model.dart';
 import 'package:provider/provider.dart'; // Import provider package
 import 'package:project/ui/pages/main/initialized.dart';  // Import pages
@@ -24,6 +25,9 @@ class HYMainScreen extends StatelessWidget {
               selectedFontSize: 14,
               unselectedFontSize: 14,
               onTap: (value) {
+                print("***********************************");
+                CurrentNavigationObserver.displayStack();
+                print("***********************************");
                 navigationViewModel.setCurrentIndex(value);  // Update index using ViewModel
               },
             ),

@@ -148,9 +148,11 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
   }
 
   Widget buildSubmitButton(UserViewModel viewModel, BuildContext context) {
+        final double buttonHeight = MediaQuery.of(context).size.height * 0.06;
+
     return Container(
       width: double.infinity,
-      height: 60.h,
+      height: buttonHeight,
       child: ElevatedButton(
         style: ButtonStyle(backgroundColor: MaterialStateProperty.all(Colors.red)),
         child: Text(

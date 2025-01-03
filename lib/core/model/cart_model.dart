@@ -4,14 +4,14 @@ class CartModel {
   List<CartItem> cart = [];
 
   // Add a product to the cart (with quantity handling)
-  void addProduct(Product product) {
+  void addProduct(Product product, int quantity) {
     final existingItem = cart.firstWhere(
           (item) => item.product == product,
       orElse: () => CartItem(product: product, quantity: 0), // Return a default CartItem with quantity 0 if not found
     );
 
     if (existingItem.quantity == 0) {
-      cart.add(CartItem(product: product, quantity: 1)); // Add new product with quantity 1
+      cart.add(CartItem(product: product, quantity: quantity)); // Add new product with quantity 1
     } else {
       existingItem.quantity += 1; // Increment quantity if the product is already in the cart
     }
@@ -34,7 +34,7 @@ class CartModel {
 
   // Check if a product is already in the cart
   bool containsProduct(Product product) {
-    return cart.any((item) => item.product == product);
+    return cart.any((item) => item.product.name == product.name);
   }
 
   // Clear the cart
@@ -66,4 +66,19 @@ class CartItem {
   int quantity;
 
   CartItem({required this.product, this.quantity = 1});
+  // Convert a Map into a CartItem
+  factory CartItem.fromMap(Map<String, dynamic> map) {
+    return CartItem(
+      product: Product.fromJson(map['product']),
+      quantity: map['quantity'] ?? 1,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'product': product.toJson(), // Convert the Product object to a map
+      'quantity': quantity,
+    };
+  }
+
 }

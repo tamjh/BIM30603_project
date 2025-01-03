@@ -20,20 +20,24 @@ class FavViewModel extends ChangeNotifier {
 
 
   Future<void> fetchProducts() async {
+    if (id.isEmpty) {
+      throw Exception("From fav VM: User ID is required to fetch favourites.");
+    }
+
     isLoading = true;
     notifyListeners();
 
     try {
-      // Fetch data from the service
       final favData = await _service.getFavItems(id);
-
-      // Map the fetched data to ProductViewModel
       favs = favData;
+    } catch (e) {
+      print("Error fetching favourites: $e");
     } finally {
       isLoading = false;
       notifyListeners();
     }
   }
+
 
   Future<void> addFav(String productId) async {
     try {

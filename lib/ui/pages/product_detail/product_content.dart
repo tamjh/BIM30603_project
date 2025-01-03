@@ -3,13 +3,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project/core/services/product_service.dart';
 import 'package:project/core/model/product_model.dart';
 import 'package:project/core/viewmodel/cart_view_model.dart';
-import 'package:project/ui/widgets/errorMsg.dart';
+
 import 'package:provider/provider.dart';
 
 class ProductDetailContent extends StatelessWidget {
   final String id;
 
   const ProductDetailContent({required this.id, super.key});
+
+  int get quantity => 1;
+  set quantity(int num) {
+    quantity = num;
+  }
 
   Future<Product> fetchProductDetails() async {
     final productService = ProductService();
@@ -22,6 +27,8 @@ class ProductDetailContent extends StatelessWidget {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double imageWidth = screenWidth * 0.6;
     final double imageHeight = imageWidth * 1.6;
+
+    int quantity = 0;
 
     return FutureBuilder<Product>(
       future: fetchProductDetails(),
@@ -161,10 +168,113 @@ class ProductDetailContent extends StatelessWidget {
                   backgroundColor: MaterialStateProperty.all(Colors.red),
                 ),
                 onPressed: () {
-                  cartViewModel.addToCart(context, product);
-                  Navigator.pop(context);
-
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      int dialogQuantity = 1; // Local quantity variable for dialog
+                      return AlertDialog(
+                        backgroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20), // Rounded corners
+                        ),
+                        title: Center(
+                          child: Text(
+                            'Add to Cart',
+                            style: TextStyle(fontSize: 20.sp, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        content: StatefulBuilder(
+                          builder: (BuildContext context, StateSetter setState) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: Image.asset(
+                                    "assets/images/pro/${product.image}.png",
+                                    width: 100.sp,
+                                    height: 100.sp,
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
+                                SizedBox(height: 10.h),
+                                Text(
+                                  product.name,
+                                  style: TextStyle(fontSize: 18.sp, fontWeight: FontWeight.w500),
+                                ),
+                                SizedBox(height: 10.h),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        if (dialogQuantity > 1) {
+                                          setState(() {
+                                            dialogQuantity--;
+                                          });
+                                        }
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.red,
+                                        shape: CircleBorder(),
+                                      ),
+                                      child: Icon(Icons.remove, color: Colors.white),
+                                    ),
+                                    SizedBox(width: 10.w),
+                                    Text(
+                                      "$dialogQuantity",
+                                      style: TextStyle(fontSize: 18.sp),
+                                    ),
+                                    SizedBox(width: 10.w),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          dialogQuantity++;
+                                        });
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.green,
+                                        shape: CircleBorder(),
+                                      ),
+                                      child: Icon(Icons.add, color: Colors.white),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context); // Close the dialog
+                            },
+                            child: Text(
+                              "Cancel",
+                              style: TextStyle(color: Colors.red, fontSize: 16.sp),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              cartViewModel.addToCart(context, product, dialogQuantity);
+                              Navigator.pop(context);
+                              Navigator.pop(context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.blue,
+                            ),
+                            child: Text(
+                              "Add",
+                              style: TextStyle(color: Colors.white, fontSize: 16.sp),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
+
+
                 child: Text(
                   "Add to cart",
                   style: TextStyle(color: Colors.white, fontSize: 18.sp),
@@ -172,24 +282,7 @@ class ProductDetailContent extends StatelessWidget {
               ),
             ),
           ),
-          Expanded(
-            child: Container(
-              height: 50.h,
-              margin: EdgeInsets.symmetric(horizontal: 5.w),
-              child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(Colors.red),
-                ),
-                onPressed: () {
-                  // Handle payment logic
-                },
-                child: Text(
-                  "Pay now",
-                  style: TextStyle(color: Colors.white, fontSize: 18.sp),
-                ),
-              ),
-            ),
-          ),
+
         ],
       ),
     );

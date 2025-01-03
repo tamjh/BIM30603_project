@@ -7,7 +7,7 @@ class CartService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
   // Add product ID to the cart (store only product_id)
-  Future<void> addToCart(String uid, Product product) async {
+  Future<void> addToCart(String uid, Product product, int quantity) async {
     try {
       final cartRef = _db.collection('users').doc(uid).collection('carts');
 
@@ -18,7 +18,7 @@ class CartService {
         // If the product doesn't exist in the cart, add it
         await cartRef.add({
           'productId': product.id,
-          'quantity': 1,
+          'quantity': quantity,
           'createdAt': FieldValue.serverTimestamp(),
         });
         print('Product added to cart.');

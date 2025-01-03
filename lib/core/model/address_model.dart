@@ -4,7 +4,7 @@ class Address {
   final String postcode;
   final String city;
   final String state;
-  final bool isDefault;
+  late final bool isDefault;
 
   String get full => "$address, $postcode, $city, $state";
 
