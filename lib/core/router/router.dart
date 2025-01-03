@@ -41,7 +41,6 @@ class HYRouter {
     ProductDetailScreen.routeName: (ctx) => ProductDetailScreen(),
     FavouriteScreen.routeName: (ctx) => FavouriteScreen(),
     SuccessPurchasePage.routeName: (ctx) => SuccessPurchasePage(),
-    AboutUsScreen.routeName: (ctx) => AboutUsScreen()
   };
 
   static final RouteFactory generateRoute = (settings) => null;
