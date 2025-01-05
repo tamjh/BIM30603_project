@@ -261,7 +261,7 @@ class ProductDetailContent extends StatelessWidget {
                               Navigator.pop(context);
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.blue,
+                              backgroundColor: Colors.red,
                             ),
                             child: Text(
                               "Add",

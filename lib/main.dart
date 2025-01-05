@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:project/core/router/router.dart';
 import 'package:project/provider.dart';
@@ -12,10 +13,12 @@ import 'core/NavigatorObserver.dart';
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  WidgetsBinding widgetBinding = WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  FlutterNativeSplash.preserve(widgetsBinding: widgetBinding);
 
   runApp(
     MultiProvider(
@@ -25,8 +28,27 @@ void main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initialization();
+  }
+
+  void initialization() async {
+    print('pausing');
+    await Future.delayed(const Duration(seconds: 1));
+    print('resuming');
+    FlutterNativeSplash.remove();
+  }
 
   @override
   Widget build(BuildContext context) {

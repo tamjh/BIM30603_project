@@ -22,53 +22,62 @@ class _FavContentState extends State<FavContent> {
       final favViewModel = Provider.of<FavViewModel>(context, listen: false);
       if (favViewModel.id.isNotEmpty) {
         favViewModel.fetchProducts();
-      } else {
-        //print("From fav_content: Error: User ID is empty. Cannot fetch favourites.");
       }
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Consumer2<FavViewModel, ProductViewModel>(
-        builder: (context, favViewModel, productViewModel, child) {
-          final String uid = favViewModel.id;
+      builder: (context, favViewModel, productViewModel, child) {
+        final String uid = favViewModel.id;
 
-          // Use product IDs from favorites to fetch corresponding products
-          final List<Product> favoriteProducts = favViewModel.favs
-              .map((fav) {
-            return productViewModel.products.firstWhere(
-                  (product) => product.id == fav.productId,
-              orElse: () => Product(
-                id: '', // Use a default/empty Product
-                name: 'Unknown',
-                image: '',
-                price: 0,
-                category: '',
-                brand_id: '',
-                description: [],
-                created_at: DateTime.now(),
-              ),
-            );
-          })
-              .where((product) => product.id.isNotEmpty) // Filter out invalid products
-              .toList();
-
-          return favViewModel.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : GridView.builder(
-            itemCount: favoriteProducts.length,
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 300.w,
-              childAspectRatio: 0.5,
+        // Use product IDs from favorites to fetch corresponding products
+        final List<Product> favoriteProducts = favViewModel.favs
+            .map((fav) {
+          return productViewModel.products.firstWhere(
+                (product) => product.id == fav.productId,
+            orElse: () => Product(
+              id: '', // Use a default/empty Product
+              name: 'Unknown',
+              image: '',
+              price: 0,
+              category: '',
+              brand_id: '',
+              description: [],
+              created_at: DateTime.now(),
             ),
-            itemBuilder: (BuildContext ctx, int index) {
-              var product = favoriteProducts[index];
-              return buildItem(product);
-            },
           );
-        });
+        })
+            .where((product) => product.id.isNotEmpty) // Filter out invalid products
+            .toList();
+
+        if (favViewModel.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (favoriteProducts.isEmpty) {
+          return Center(
+            child: Text(
+              "You have no favorite items.",
+              style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),
+            ),
+          );
+        }
+
+        return GridView.builder(
+          itemCount: favoriteProducts.length,
+          gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 300.w,
+            childAspectRatio: 0.5,
+          ),
+          itemBuilder: (BuildContext ctx, int index) {
+            var product = favoriteProducts[index];
+            return buildItem(product);
+          },
+        );
+      },
+    );
   }
 
   Widget buildItem(Product product) {

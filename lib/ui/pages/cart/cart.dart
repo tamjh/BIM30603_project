@@ -22,11 +22,9 @@ class _CartScreenState extends State<CartScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(   
-        title: Text(
-          
-          "My Cart",
-          style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 40.sp),
+      appBar: AppBar(
+        title: FittedBox(
+            child: Image.asset("assets/images/word_logo.png", height: 30.sp,)
         ),
         centerTitle: true,
       ),

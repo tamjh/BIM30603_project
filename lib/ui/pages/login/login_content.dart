@@ -29,9 +29,13 @@ class _HYLoginContentState extends State<HYLoginContent> {
             return ListView(
               padding: EdgeInsets.symmetric(horizontal: 20.w),
               children: [
-                SizedBox(height: constraints.maxHeight * 0.10),
+                SizedBox(height: 30.h),
+                Image.asset(
+                    "assets/images/logo.png",
+                  height: 200.sp,
+                ),
                 buildLoginTitle(context),
-                SizedBox(height: 50.h),
+                SizedBox(height: 10.h),
                 buildContent(),
                 SizedBox(height: 10.h),
                 buildArrow(context),
@@ -49,12 +53,13 @@ class _HYLoginContentState extends State<HYLoginContent> {
 
   Widget buildLoginTitle(BuildContext context) {
     return Container(
+      alignment: Alignment.center,
       width: double.infinity,
-      padding: EdgeInsets.only(left: 20.w),
+
       child: Text(
         "Login",
         style: TextStyle(
-          fontSize: 50.sp,
+          fontSize: 30.sp,
           fontFamily: GoogleFonts.tapestry().fontFamily,
         ),
       ),
@@ -116,8 +121,6 @@ class _HYLoginContentState extends State<HYLoginContent> {
   Widget buildArrow(BuildContext ctx) {
     return GestureDetector(
       onTap: () {
-
-
         // Navigating to Register screen
         Navigator.pushNamedAndRemoveUntil(ctx, HYRegister.routeName, (route)=>false);
       },

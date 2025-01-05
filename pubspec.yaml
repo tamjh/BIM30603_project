@@ -45,6 +45,7 @@ dependencies:
   cloud_firestore: ^5.5.1
   get: ^4.6.6
   google_maps_flutter: ^2.10.0
+  flutter_native_splash: ^2.4.4
 
 
 dev_dependencies:
@@ -98,3 +99,11 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+flutter_native_splash:
+  android: true
+  ios: true
+  web: false
+
+  color: "#f5b6be"
+  image: "assets/images/logo.png"

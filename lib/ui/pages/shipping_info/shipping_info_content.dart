@@ -89,7 +89,7 @@ class _ShippingInfoContentState extends State<ShippingInfoContent> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: 16.h),
+              padding: EdgeInsets.only(top: 5.h, bottom: 10.h),
               child: buildNewBtn(context),
             ),
           ],

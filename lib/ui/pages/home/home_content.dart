@@ -108,6 +108,7 @@ class SearchBar extends StatelessWidget {
                 label: const Text("Search"),
                 suffixIcon: IconButton(
                     onPressed: () {
+                      searchviewmodel.clearSearch();
                       searchviewmodel.updateSearchText(searchController.text);
                       searchviewmodel.searchItems(
                           searchviewmodel.searchText.toLowerCase().trim(),

@@ -14,8 +14,9 @@ class ShopScreen extends StatelessWidget {
     HYSizeFit.initialize();
     return Scaffold(
       appBar: AppBar(
-        title: Text("Shop", style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 40.sp)),
-        centerTitle: true,
+        title: FittedBox(
+            child: Image.asset("assets/images/word_logo.png", height: 30.sp,)
+        ),        centerTitle: true,
         actions: [
           Padding(
             padding: const EdgeInsets.all(8.0),

@@ -5,6 +5,7 @@ import 'package:project/core/model/UserModel.dart';
 import 'package:project/core/viewmodel/user_view_model.dart';
 import 'package:project/ui/pages/login/login.dart';
 import 'package:project/ui/pages/main/main.dart';
+import 'package:project/ui/widgets/errorMsg.dart';
 import 'package:provider/provider.dart';
 
 class HYRegisterContent extends StatefulWidget {
@@ -35,13 +36,12 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: constraints.maxHeight * 0.15),
+                    Center(child: Image.asset("assets/images/logo.png", height: 200.sp,)),
                     buildRegisterTitle(context),
-                    SizedBox(height: 50.h),
+                    SizedBox(height: 30.h),
                     buildContent(),
                     SizedBox(height: 10.h),
                     buildArrow(context),
-                    SizedBox(height: 20.h),
                     viewModel.isLoading
                         ? Center(child: CircularProgressIndicator())
                         : buildSubmitButton(viewModel, context),
@@ -57,12 +57,12 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
 
   Widget buildRegisterTitle(BuildContext context) {
     return Container(
+      alignment: Alignment.center,
       width: double.infinity,
-      padding: EdgeInsets.only(left: 20.sp),
       child: Text(
         "Register",
         style: TextStyle(
-          fontSize: 50.sp,
+          fontSize: 30.sp,
           fontFamily: GoogleFonts.tapestry().fontFamily,
         ),
       ),
@@ -73,11 +73,11 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
     return Column(
       children: [
         buildTextField(nameController, "Name", "Please enter your name"),
-        SizedBox(height: 30.h),
+        SizedBox(height: 5.h),
         buildTextField(emailController, "Email", "Please enter your email"),
-        SizedBox(height: 30.h),
+        SizedBox(height: 5.h),
         buildPasswordField(passwordController, "Password", "Please enter your password"),
-        SizedBox(height: 30.h),
+        SizedBox(height: 5.h),
         buildPasswordField(repasswordController, "Re-enter Password", "Please re-enter your password"),
       ],
     );
@@ -178,7 +178,7 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
               Navigator.pushNamed(context, HYMainScreen.routeName);
             }
           } catch (e) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(e.toString())));
+            SnackbarUtils.showErrorMessage(context, "Please fill in all content");;
           }
         },
       ),

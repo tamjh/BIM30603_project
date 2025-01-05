@@ -12,13 +12,9 @@ class HYHomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: FittedBox(
-          fit: BoxFit.scaleDown,
-          child: Text(
-            "Vix Sport",
-            style: HYAppTheme.normalTheme.textTheme.displayLarge
-                ?.copyWith(fontWeight: FontWeight.bold, fontSize: 32.h),
-          ),
+          child: Image.asset("assets/images/word_logo.png", height: 30.sp,)
         ),
       ),
       drawer: DrawerDisplay(),

@@ -21,7 +21,7 @@ class HYAppTheme {
     
     // Bottom Navigation Bar Theme
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
-      selectedItemColor: Colors.pinkAccent,
+      selectedItemColor: Colors.red,
       unselectedItemColor: Colors.grey,
       backgroundColor: Colors.transparent,
       

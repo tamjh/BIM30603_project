@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:project/core/model/address_model.dart';
-import 'package:project/ui/pages/about_us/about.dart';
 import 'package:project/ui/pages/cart/cart.dart';
 import 'package:project/ui/pages/edit_address/edit_address.dart';
 import 'package:project/ui/pages/favourite/fav.dart';

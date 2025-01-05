@@ -13,11 +13,9 @@ class FavouriteScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Favourite Item",
-            style: Theme.of(context)
-                .textTheme
-                .displayLarge
-                ?.copyWith(fontSize: 32.sp)),
+        title: FittedBox(
+            child: Image.asset("assets/images/word_logo.png", height: 30.sp,)
+        ),
         centerTitle: true,
       ),
       drawer: DrawerDisplay(),

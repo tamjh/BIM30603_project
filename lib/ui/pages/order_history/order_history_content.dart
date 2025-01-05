@@ -139,6 +139,7 @@ class _OrderHistoryContentState extends State<OrderHistoryContent> {
                                     context: context,
                                     builder: (BuildContext context) {
                                       return Dialog(
+                                        backgroundColor: Colors.white,
                                         shape: RoundedRectangleBorder(
                                           borderRadius:
                                               BorderRadius.circular(20.0),
@@ -162,7 +163,7 @@ class _OrderHistoryContentState extends State<OrderHistoryContent> {
                                                         fontWeight:
                                                             FontWeight.bold,
                                                         color:
-                                                            Colors.blueAccent,
+                                                            Colors.redAccent,
                                                       ),
                                                 ),
                                               ),
@@ -203,26 +204,31 @@ class _OrderHistoryContentState extends State<OrderHistoryContent> {
                                                                         16.sp,
                                                                   ),
                                                         ),
-                                                        subtitle: Text(
-                                                          "RM ${item['product']['price']}",
-                                                          style: Theme.of(
-                                                                  context)
-                                                              .textTheme
-                                                              .displayMedium,
-                                                        ),
-                                                        trailing: Text(
-                                                          "Qty: ${item['quantity']}",
-                                                          style:
+                                                        subtitle: Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Text(
+                                                              "RM ${item['product']['price']}",
+                                                              style: Theme.of(
+                                                                      context)
+                                                                  .textTheme
+                                                                  .displayMedium,
+                                                            ),
+                                                            Text(
+                                                              "Qty: ${item['quantity']}",
+                                                              style:
                                                               Theme.of(context)
                                                                   .textTheme
                                                                   .displaySmall
                                                                   ?.copyWith(
-                                                                    color: Colors
-                                                                        .green,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                  ),
+                                                                color: Colors
+                                                                    .green,
+                                                                fontWeight:
+                                                                FontWeight
+                                                                    .bold,
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
                                                       ),
                                                     );
@@ -249,7 +255,7 @@ class _OrderHistoryContentState extends State<OrderHistoryContent> {
                                                   child: Text(
                                                     "Close",
                                                     style: TextStyle(
-                                                        fontSize: 25.sp,
+                                                        fontSize: 16.sp,
                                                         color: Colors.white),
                                                   ),
                                                 ),

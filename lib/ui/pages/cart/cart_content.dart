@@ -39,7 +39,7 @@ class _CartContentState extends State<CartContent> {
 
         // Show empty cart message if no items
         if (cartViewModel.cartItems.isEmpty) {
-          return const Center(child: Text("Cart is empty."));
+          return Center(child: Text("Cart is empty", style: TextStyle(fontSize: 24.sp, fontWeight: FontWeight.bold),));
         }
 
         // Show cart items
