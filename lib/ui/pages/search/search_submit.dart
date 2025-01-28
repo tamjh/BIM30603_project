@@ -36,7 +36,11 @@ class BuildButton extends StatelessWidget {
                   onPressed: () {
                     // Reset the search text and selections
                     searchViewModel.updateSearchText('');
-                    searchViewModel.fetchKeywords();
+                    searchViewModel.clearSearch();
+                    searchViewModel.searchItems(
+                        searchViewModel.searchText.toLowerCase().trim(),
+                        searchViewModel.selectedBrands,
+                        productViewModel);
                     Navigator.pop(context); // Close the search modal
                   },
                   child: Text(

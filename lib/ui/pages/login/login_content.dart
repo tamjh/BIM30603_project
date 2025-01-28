@@ -31,7 +31,7 @@ class _HYLoginContentState extends State<HYLoginContent> {
               children: [
                 SizedBox(height: 30.h),
                 Image.asset(
-                    "assets/images/logo.png",
+                    "assets/images/logo_copy.png",
                   height: 200.sp,
                 ),
                 buildLoginTitle(context),

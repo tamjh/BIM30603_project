@@ -36,7 +36,7 @@ class _HYRegisterContentState extends State<HYRegisterContent> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Center(child: Image.asset("assets/images/logo.png", height: 200.sp,)),
+                    Center(child: Image.asset("assets/images/logo_copy.png", height: 200.sp,)),
                     buildRegisterTitle(context),
                     SizedBox(height: 30.h),
                     buildContent(),
